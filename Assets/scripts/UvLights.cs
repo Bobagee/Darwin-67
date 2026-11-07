@@ -15,8 +15,8 @@ public class UVLight : MonoBehaviour
     private bool isOn;
 
     public bool IsOn => isOn;
-    public float BatteryPercent => currentBattery / maxBattery;
     public Light Spotlight => uvSpotlight;
+    public float BatteryPercent => currentBattery / maxBattery;
 
     private void Start()
     {

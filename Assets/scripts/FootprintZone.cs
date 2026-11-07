@@ -5,7 +5,7 @@ public class FootprintZone : MonoBehaviour
     [Header("Referencias de Luz y Zonas")]
     [SerializeField] private UVLight playerUVLight;
     [SerializeField] private GameObject[] zones; 
-    [SerializeField] private float zoneDuration = 8f;s
+     [SerializeField] private float zoneDuration = 8f;
 
     [Header("Configuración Visual de Huellas")]
     [SerializeField] private float fadeSpeed = 4f;
@@ -74,7 +74,7 @@ public class FootprintZone : MonoBehaviour
 
         bool shouldReveal = false;
 
-        if (playerUVLight.IsOn && zones[activeZoneIndex] != null)
+        if (playerUVLight.IsOn && playerUVLight.Spotlight != null && zones[activeZoneIndex] != null)
         {
             Vector3 dirToZone = (zones[activeZoneIndex].transform.position - playerUVLight.transform.position).normalized;
             float angle = Vector3.Angle(playerUVLight.transform.forward, dirToZone);
