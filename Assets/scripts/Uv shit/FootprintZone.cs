@@ -2,13 +2,18 @@ using UnityEngine;
 
 public class FootprintZone : MonoBehaviour
 {
-    [Header("Referencias de Luz y Zonas")]
-    [SerializeField] private UVLight playerUVLight;
-    [SerializeField] private GameObject[] zones; 
-     [SerializeField] private float zoneDuration = 8f;
+    [Header("Referencias del Jugador y Luz")]
+    [SerializeField] private UvLights playerUVLight;
 
-    [Header("Configuración Visual de Huellas")]
-    [SerializeField] private float fadeSpeed = 4f;
+    [Header("Zonas de Huellas (Arrastra los objetos aqui)")]
+    [SerializeField] private GameObject[] zones;
+
+    [Header("Tiempos y Velocidades (Inspector)")]
+    [Tooltip("Segundos que dura activa una zona antes de cambiar a otra")]
+    [SerializeField] private float zoneDuration = 8f;
+    
+    [Tooltip("Velocidad con la que aparece/desaparece la huella (Fade)")]
+    [SerializeField] private float fadeSpeed = 5f;
 
     private int activeZoneIndex = -1;
     private float zoneTimer;
@@ -76,12 +81,20 @@ public class FootprintZone : MonoBehaviour
 
         if (playerUVLight.IsOn && playerUVLight.Spotlight != null && zones[activeZoneIndex] != null)
         {
-            Vector3 dirToZone = (zones[activeZoneIndex].transform.position - playerUVLight.transform.position).normalized;
-            float angle = Vector3.Angle(playerUVLight.transform.forward, dirToZone);
+            Light lightComp = playerUVLight.Spotlight;
+            Transform lightTransform = lightComp.transform;
 
-            if (angle <= playerUVLight.Spotlight.spotAngle * 0.5f)
+            Vector3 zonePosition = zones[activeZoneIndex].transform.position;
+            Vector3 dirToZone = zonePosition - lightTransform.position;
+            float distanceToZone = dirToZone.magnitude;
+
+            if (distanceToZone <= lightComp.range)
             {
-                shouldReveal = true;
+                float angle = Vector3.Angle(lightTransform.forward, dirToZone.normalized);
+                if (angle <= lightComp.spotAngle * 0.5f)
+                {
+                    shouldReveal = true;
+                }
             }
         }
 
