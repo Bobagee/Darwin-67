@@ -1,69 +1,87 @@
-
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movimiento")]
-    [SerializeField] private float moveSpeed = 4.0f;
+    [Header("Velocidades de Movimiento")]
+    [Tooltip("Velocidad normal al caminar (WASD)")]
+    [SerializeField] private float walkSpeed = 4.0f;
+
+    [Tooltip("Velocidad al mantener presionado Shift")]
+    [SerializeField] private float sprintSpeed = 7.5f;
+
+    [Tooltip("Fuerza de gravedad")]
     [SerializeField] private float gravity = -9.81f;
 
-    [Header("Camara y Vista")]
+    [Header("Controles y Resistencia")]
+    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField] private StaminaSistema staminaSistema;
+
+    [Header("Cámara y Vista")]
     [SerializeField] private Transform playerCamera;
-    [SerializeField] private float mouseSensitivity = 2.0f;
-    [SerializeField] private float topClamp = -89.0f;
-    [SerializeField] private float bottomClamp = 89.0f;
+    [Tooltip("Sensibilidad recomendada: entre 2.0 y 5.0")]
+    [SerializeField] private float mouseSensitivity = 3.0f;
+    [SerializeField] private float topClamp = -80.0f;
+    [SerializeField] private float bottomClamp = 80.0f;
 
     private CharacterController controller;
     private Vector3 velocity;
     private float xRotation = 0f;
 
+    public float CurrentSpeed { get; private set; }
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
+        if (staminaSistema == null)
+        {
+            staminaSistema = GetComponent<StaminaSistema>();
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     private void Update()
     {
-        HandleLook();
-        HandleMovement();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+        ManejarVista();
+        ManejarMovimiento();
     }
 
-    private void HandleLook()
+    private void ManejarVista()
     {
-        if (playerCamera == null) return;
-
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
 
-        playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        if (playerCamera != null)
+        {
+            playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        }
+
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    private void HandleMovement()
+    private void ManejarMovimiento()
     {
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * moveX + transform.forward * moveZ;
+
+        bool intentandoCorrer = Input.GetKey(sprintKey) && moveZ > 0.1f;
+        bool tieneEstamina = staminaSistema == null || staminaSistema.CurrentStamina > 0f;
+        bool estaCorriendo = intentandoCorrer && tieneEstamina;
+
+        CurrentSpeed = estaCorriendo ? sprintSpeed : walkSpeed;
+
+        controller.Move(move * CurrentSpeed * Time.deltaTime);
+
         if (controller.isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
-
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * moveSpeed * Time.deltaTime);
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);

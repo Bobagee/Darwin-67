@@ -32,9 +32,7 @@ public class PickUpItem : Iteraccion
         gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Restablece el objeto en su lugar original si falla la trampa.
-    /// </summary>
+  
     public void Reaparecer()
     {
         transform.position = posicionInicial;

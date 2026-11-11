@@ -11,14 +11,13 @@ public class LightConeMesh : MonoBehaviour
     [SerializeField] private bool autoSyncWithLight = true;
 
     [Header("Dimensiones Manuales")]
-    [SerializeField] private float startRadius = 0.05f;    // Radio en la boca de la linterna
-    [SerializeField] private float manualLength = 5.0f;     // Largo del cono sin Spotlight
-    [SerializeField] private float manualEndRadius = 1.8f;  // Radio final sin Spotlight
+    [SerializeField] private float startRadius = 0.05f;   
+    [SerializeField] private float manualLength = 5.0f;    
+    [SerializeField] private float manualEndRadius = 1.8f; 
 
     [Header("Calidad Malla")]
     [Range(8, 64)]
-    [SerializeField] private int segments = 24;             // Suavidad de la circunferencia
-
+    [SerializeField] private int segments = 24;            
     private void Update()
     {
         SyncAndGenerate();
