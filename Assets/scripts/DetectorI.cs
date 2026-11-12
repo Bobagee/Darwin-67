@@ -1,3 +1,4 @@
+// --- DetectorI.cs ---
 using UnityEngine;
 
 public class DetectorI : MonoBehaviour
@@ -27,18 +28,18 @@ public class DetectorI : MonoBehaviour
         if (camaraJugador == null) camaraJugador = Camera.main;
 
         Ray ray = new Ray(camaraJugador.transform.position, camaraJugador.transform.forward);
+        Iteraccion interactableDetectado = null;
 
         if (Physics.Raycast(ray, out RaycastHit hit, distanciaInteraccion, capaInteractuable))
         {
-            Iteraccion interactable = hit.collider.GetComponentInParent<Iteraccion>();
-
-            if (interactable != null)
-            {
-                objetoActual = interactable;
-                return;
-            }
+            interactableDetectado = hit.collider.GetComponentInParent<Iteraccion>();
         }
 
-        objetoActual = null;
+        if (interactableDetectado != objetoActual)
+        {
+            if (objetoActual != null) objetoActual.OnMirar(false);
+            objetoActual = interactableDetectado;
+            if (objetoActual != null) objetoActual.OnMirar(true);
+        }
     }
 }

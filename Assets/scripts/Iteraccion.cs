@@ -8,4 +8,5 @@ public abstract class Iteraccion : MonoBehaviour
 
     public string MensajePrompt => mensajePrompt;
     public abstract void Interactuar();
+    public virtual void OnMirar(bool mirando) { }
 }
