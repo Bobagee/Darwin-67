@@ -7,37 +7,20 @@ public class PickUpItem : Iteraccion
     [SerializeField] private ItemTipo tipoObjeto;
     [SerializeField] private bool reaparecerSiFallaTrampa = true;
 
-[Header("Feedback Visual (Resplandor)")]
-[SerializeField] private GameObject efectoResplandor;
-[SerializeField] private Renderer meshRenderer;      
-[SerializeField] private Color colorBrillo = new Color(1f, 0.9f, 0.4f, 1f);
+    [Header("Resplandor al Mirar")]
+    [SerializeField] private Color colorBrillo = new Color(1f, 0.92f, 0.45f, 1f);
+    [SerializeField] private float intensidadBrillo = 1.5f;
+    [SerializeField] private GameObject luzOContornoOpcional;
 
     [Header("Eventos")]
-    [Tooltip("Opcional: por si quieres conectar sonidos o partículas al recogerlo")]
     public UnityEvent<ItemTipo> OnItemPickedUp;
 
     private Vector3 posicionInicial;
     private Quaternion rotacionInicial;
     private bool recolectado;
 
-public override void OnMirar(bool mirando)
-{
-    if (efectoResplandor != null)
-        efectoResplandor.SetActive(mirando && !recolectado);
-
-    if (meshRenderer != null)
-    {
-        if (mirando && !recolectado)
-        {
-            meshRenderer.material.EnableKeyword("_EMISSION");
-            meshRenderer.material.SetColor("_EmissionColor", colorBrillo * 0.4f);
-        }
-        else
-        {
-            meshRenderer.material.SetColor("_EmissionColor", Color.black);
-        }
-    }
-}
+    private Renderer[] renderers;
+    private Color[] coloresOriginales;
 
     public ItemTipo Tipo => tipoObjeto;
     public bool Recolectado => recolectado;
@@ -47,17 +30,55 @@ public override void OnMirar(bool mirando)
         posicionInicial = transform.position;
         rotacionInicial = transform.rotation;
 
-        if (reaparecerSiFallaTrampa)
+        renderers = GetComponentsInChildren<Renderer>();
+        coloresOriginales = new Color[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
         {
-            Escape.OnTrapFailed += Reaparecer;
+            if (renderers[i].material.HasProperty("_BaseColor"))
+                coloresOriginales[i] = renderers[i].material.GetColor("_BaseColor");
+            else if (renderers[i].material.HasProperty("_Color"))
+                coloresOriginales[i] = renderers[i].material.color;
         }
+
+        if (luzOContornoOpcional != null)
+            luzOContornoOpcional.SetActive(false);
+
+        if (reaparecerSiFallaTrampa)
+            Escape.OnTrapFailed += Reaparecer;
     }
 
     private void OnDestroy()
     {
         if (reaparecerSiFallaTrampa)
-        {
             Escape.OnTrapFailed -= Reaparecer;
+    }
+
+    public override void OnMirar(bool mirando)
+    {
+        bool activar = mirando && !recolectado;
+
+        if (luzOContornoOpcional != null)
+            luzOContornoOpcional.SetActive(activar);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Material mat = renderers[i].material;
+            if (activar)
+            {
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor", colorBrillo * intensidadBrillo);
+
+                Color resaltado = Color.Lerp(coloresOriginales[i], colorBrillo, 0.45f);
+                if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", resaltado);
+                if (mat.HasProperty("_Color")) mat.color = resaltado;
+            }
+            else
+            {
+                mat.SetColor("_EmissionColor", Color.black);
+                if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", coloresOriginales[i]);
+                if (mat.HasProperty("_Color")) mat.color = coloresOriginales[i];
+            }
         }
     }
 
@@ -65,6 +86,7 @@ public override void OnMirar(bool mirando)
     {
         if (recolectado) return;
 
+        OnMirar(false);
         recolectado = true;
 
         if (InventarioUI.Instance != null)
@@ -81,6 +103,7 @@ public override void OnMirar(bool mirando)
         transform.position = posicionInicial;
         transform.rotation = rotacionInicial;
         recolectado = false;
+        OnMirar(false);
         gameObject.SetActive(true);
     }
 }

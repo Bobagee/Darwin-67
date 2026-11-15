@@ -44,21 +44,24 @@ public class TrapController : MonoBehaviour
     private bool bloqueada;
     private readonly HashSet<ItemTipo> recolectados = new HashSet<ItemTipo>();
 
+private bool trampaCrafteada;
+
+public void ConfirmarCrafteo()
+{
+    trampaCrafteada = true;
+}
+
     public bool EstaColocada => colocada;
 
     /// <summary>True si ya se recogieron todos los materiales (o si no se requieren).</summary>
-    public bool MaterialesListos
+  public bool MaterialesListos
+{
+    get
     {
-        get
-        {
-            if (!requerirMateriales) return true;
-            foreach (ItemTipo tipo in materialesRequeridos)
-            {
-                if (!recolectados.Contains(tipo)) return false;
-            }
-            return true;
-        }
+        if (!requerirMateriales) return true;
+        return trampaCrafteada;
     }
+}
 
     /// <summary>Conectalo al evento OnItemPickedUp de cada PickUpItem (opcion Dynamic ItemTipo).</summary>
     public void RegistrarMaterial(ItemTipo tipo)
@@ -152,13 +155,12 @@ public class TrapController : MonoBehaviour
     }
 
     /// <summary>Quita la trampa para poder colocarla de nuevo (tras un fallo o al reiniciar el nivel).</summary>
-    public void Reiniciar()
-    {
-        colocada = false;
-        bloqueada = false;
-        if (trampa != null) trampa.SetActive(false);
-    }
-
+    public void Reiniciar(){
+    colocada = false;
+    bloqueada = false;
+    trampaCrafteada = false;
+    if (trampa != null) trampa.SetActive(false);
+}
     // La ventana de captura se acabo sin que el jugador jalara la trampa
     private void AlExpirarVentana()
     {

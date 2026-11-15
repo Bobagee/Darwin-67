@@ -1,11 +1,10 @@
-// --- DetectorI.cs ---
 using UnityEngine;
 
 public class DetectorI : MonoBehaviour
 {
     [Header("Configuración de Raycast")]
     [SerializeField] private Camera camaraJugador;
-    [SerializeField] private float distanciaInteraccion = 2.5f;
+    [SerializeField] private float distanciaInteraccion = 3.0f;
     [SerializeField] private LayerMask capaInteractuable = ~0;
 
     [Header("Controles")]
@@ -26,11 +25,12 @@ public class DetectorI : MonoBehaviour
     private void BuscarObjeto()
     {
         if (camaraJugador == null) camaraJugador = Camera.main;
+        if (camaraJugador == null) return;
 
         Ray ray = new Ray(camaraJugador.transform.position, camaraJugador.transform.forward);
         Iteraccion interactableDetectado = null;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, distanciaInteraccion, capaInteractuable))
+        if (Physics.Raycast(ray, out RaycastHit hit, distanciaInteraccion, capaInteractuable, QueryTriggerInteraction.Ignore))
         {
             interactableDetectado = hit.collider.GetComponentInParent<Iteraccion>();
         }

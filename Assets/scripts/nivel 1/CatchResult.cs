@@ -55,21 +55,25 @@ public class CatchResult : MonoBehaviour
         return atrapado;
     }
 
-    private void Ganar()
-    {
-        raton.Capturar();
-        alAtraparRaton?.Invoke();
-        OnRatonAtrapado?.Invoke();
-    }
+ private void Ganar()
+{
+    raton.Capturar();
+    alAtraparRaton?.Invoke();
+    OnRatonAtrapado?.Invoke();
 
-    private void Fallar(Vector3 puntoTrampa)
-    {
-        if (raton != null) raton.Huir();
+    if (Escape.Instance != null)
+        Escape.Instance.CompletarNivel();
+}
+private void Fallar(Vector3 puntoTrampa)
+{
+    if (raton != null) raton.Huir();
 
-        SoltarQueso(puntoTrampa);
-        MostrarDibujo();
-        ReproducirBurla(puntoTrampa);
-    }
+    SoltarQueso(puntoTrampa);
+    MostrarDibujo();
+    ReproducirBurla(puntoTrampa);
+
+    Escape.NotificarTrampaFallida();
+}
 
     private void SoltarQueso(Vector3 punto)
     {

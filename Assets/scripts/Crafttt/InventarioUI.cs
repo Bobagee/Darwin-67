@@ -1,6 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InventarioUI : MonoBehaviour
 {
@@ -14,11 +14,23 @@ public class InventarioUI : MonoBehaviour
         [HideInInspector] public bool recolectado;
     }
 
+    [Header("Hoja de Papel (Lista de Objetos)")]
+    [SerializeField] private GameObject panelHojaLista;
+    [SerializeField] private KeyCode teclaSacarHoja = KeyCode.Tab;
+    [SerializeField] private bool iniciarConHojaAbierta = false;
+    [SerializeField] private bool asomarHojaAlRecoger = true;
+    [SerializeField] private float segundosAsomarHoja = 2.0f;
+
     [Header("Lista de Materiales (Nivel 1)")]
     [SerializeField] private List<ItemListaUI> materialesTrampa = new List<ItemListaUI>();
-    [SerializeField] private Button botonArmar;
+
+    [Header("Aviso para Armar (Aparece al tener los 4)")]
+    [Tooltip("Texto o imagen en pantalla que dice: Presiona [E] para Armar")]
+    [SerializeField] private GameObject avisoArmarUI;
 
     private HashSet<string> inventarioGeneral = new HashSet<string>();
+    private bool hojaAbiertaManualmente;
+    private Coroutine rutinaAsomar;
 
     private void Awake()
     {
@@ -38,22 +50,81 @@ public class InventarioUI : MonoBehaviour
 
     private void Start()
     {
+        hojaAbiertaManualmente = iniciarConHojaAbierta;
+        if (panelHojaLista != null)
+            panelHojaLista.SetActive(hojaAbiertaManualmente);
+
         ActualizarEstadoUI();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(teclaSacarHoja))
+        {
+            AlternarHojaLista();
+        }
+    }
+
+    public void AlternarHojaLista()
+    {
+        if (panelHojaLista == null) return;
+
+        if (rutinaAsomar != null)
+        {
+            StopCoroutine(rutinaAsomar);
+            rutinaAsomar = null;
+        }
+
+        hojaAbiertaManualmente = !panelHojaLista.activeSelf;
+        panelHojaLista.SetActive(hojaAbiertaManualmente);
+    }
+
+    public void OcultarHoja()
+    {
+        if (panelHojaLista == null) return;
+
+        if (rutinaAsomar != null)
+        {
+            StopCoroutine(rutinaAsomar);
+            rutinaAsomar = null;
+        }
+
+        hojaAbiertaManualmente = false;
+        panelHojaLista.SetActive(false);
     }
 
     public void RegistrarObjeto(string id)
     {
         inventarioGeneral.Add(id);
 
+        bool esMaterialTrampa = false;
         foreach (var item in materialesTrampa)
         {
             if (item.itemID == id)
             {
                 item.recolectado = true;
+                esMaterialTrampa = true;
             }
         }
 
         ActualizarEstadoUI();
+
+        if (esMaterialTrampa && asomarHojaAlRecoger && !hojaAbiertaManualmente && panelHojaLista != null)
+        {
+            if (rutinaAsomar != null) StopCoroutine(rutinaAsomar);
+            rutinaAsomar = StartCoroutine(RutinaAsomarHoja());
+        }
+    }
+
+    private IEnumerator RutinaAsomarHoja()
+    {
+        panelHojaLista.SetActive(true);
+        yield return new WaitForSeconds(segundosAsomarHoja);
+        if (!hojaAbiertaManualmente)
+        {
+            panelHojaLista.SetActive(false);
+        }
+        rutinaAsomar = null;
     }
 
     public bool TieneObjeto(string id)
@@ -82,9 +153,10 @@ public class InventarioUI : MonoBehaviour
             }
         }
 
-        if (botonArmar != null)
+        // Aparece solo cuando los 4 materiales fueron recolectados
+        if (avisoArmarUI != null)
         {
-            botonArmar.interactable = TieneTodosLosMateriales();
+            avisoArmarUI.SetActive(TieneTodosLosMateriales());
         }
     }
 
@@ -98,4 +170,8 @@ public class InventarioUI : MonoBehaviour
 
         ActualizarEstadoUI();
     }
+    public void OcultarAvisoArmar()
+{
+    if (avisoArmarUI != null) avisoArmarUI.SetActive(false);
+}
 }

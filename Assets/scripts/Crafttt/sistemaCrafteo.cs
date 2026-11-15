@@ -4,66 +4,82 @@ using UnityEngine.Events;
 
 public class sistemaCrafteo : MonoBehaviour
 {
-    [Header("Panel de Crafteo")]
-    [SerializeField] private GameObject panelCrafteoUI;
-    [SerializeField] private GameObject[] pasosVisualesDibujo; // 0: Palo+Hilo, 1: +Caja, 2: +Queso
+    [Header("UI de la Mesa de Crafteo")]
+    [SerializeField] private GameObject panelMesaCrafteoUI;
+    [SerializeField] private PiezaArrastrableUI[] piezasArrastrables;
+
+    [Header("Modelos 3D sobre la Mesa (Opcional)")]
+    [Tooltip("0: Palo+Hilo en mesa, 1: +Caja en mesa, 2: Trampa completa con Queso")]
+    [SerializeField] private GameObject[] pasos3DEnMesa;
 
     [Header("Conexión con TrapController (Aner)")]
     public UnityEvent onTrampaCompletada;
     public static event Action OnTrampaArmada;
 
     private int pasoActual = 0;
-    private string primerSeleccionadoPaso1 = "";
+    private PiezaArrastrableUI primeraPiezaPaso1;
+    private MesaCrafteo mesaActual;
 
     private void Start()
     {
-        if (panelCrafteoUI != null) panelCrafteoUI.SetActive(false);
+        OcultarUI();
+        ActualizarVisualesPasos();
     }
 
-    public void AbrirMesaCrafteo()
+    public void AbrirMesaCrafteo(MesaCrafteo mesa)
     {
-        if (InventarioUI.Instance != null && !InventarioUI.Instance.TieneTodosLosMateriales())
-            return;
-
+        mesaActual = mesa;
         pasoActual = 0;
-        primerSeleccionadoPaso1 = "";
+        primeraPiezaPaso1 = null;
+
         ActualizarVisualesPasos();
 
-        if (panelCrafteoUI != null)
+        if (piezasArrastrables != null)
         {
-            panelCrafteoUI.SetActive(true);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            foreach (var pieza in piezasArrastrables)
+            {
+                if (pieza != null) pieza.ReiniciarPieza();
+            }
         }
+
+        if (panelMesaCrafteoUI != null)
+            panelMesaCrafteoUI.SetActive(true);
     }
 
-    public void SeleccionarPiezaDibujo(string itemID)
+    public void OcultarUI()
     {
+        if (panelMesaCrafteoUI != null)
+            panelMesaCrafteoUI.SetActive(false);
+    }
+
+    public void IntentarAgregarPieza(PiezaArrastrableUI pieza)
+    {
+        string id = pieza.ItemID;
+
         // PASO 1: Palo + Hilo
         if (pasoActual == 0)
         {
-            if (itemID == "Palo" || itemID == "Hilo")
+            if (id == "Palo" || id == "Hilo")
             {
-                if (string.IsNullOrEmpty(primerSeleccionadoPaso1))
+                if (primeraPiezaPaso1 == null)
                 {
-                    primerSeleccionadoPaso1 = itemID;
+                    primeraPiezaPaso1 = pieza;
+                    pieza.MarcarComoUsada();
                 }
-                else if (primerSeleccionadoPaso1 != itemID)
+                else if (primeraPiezaPaso1.ItemID != id)
                 {
+                    pieza.MarcarComoUsada();
                     pasoActual = 1;
                     ActualizarVisualesPasos();
                 }
-            }
-            else
-            {
-                primerSeleccionadoPaso1 = "";
             }
         }
         // PASO 2: + Caja
         else if (pasoActual == 1)
         {
-            if (itemID == "Caja")
+            if (id == "Caja")
             {
+                pieza.MarcarComoUsada();
                 pasoActual = 2;
                 ActualizarVisualesPasos();
             }
@@ -71,8 +87,9 @@ public class sistemaCrafteo : MonoBehaviour
         // PASO 3: + Queso
         else if (pasoActual == 2)
         {
-            if (itemID == "Queso")
+            if (id == "Queso")
             {
+                pieza.MarcarComoUsada();
                 pasoActual = 3;
                 ActualizarVisualesPasos();
                 FinalizarCrafteo();
@@ -82,23 +99,30 @@ public class sistemaCrafteo : MonoBehaviour
 
     private void ActualizarVisualesPasos()
     {
-        if (pasosVisualesDibujo == null) return;
+        if (pasos3DEnMesa == null) return;
 
-        for (int i = 0; i < pasosVisualesDibujo.Length; i++)
+        for (int i = 0; i < pasos3DEnMesa.Length; i++)
         {
-            if (pasosVisualesDibujo[i] != null)
-                pasosVisualesDibujo[i].SetActive(i < pasoActual);
+            if (pasos3DEnMesa[i] != null)
+            {
+                // Muestra solo el paso actual alcanzado (o los acumulados)
+                pasos3DEnMesa[i].SetActive(i == pasoActual - 1);
+            }
         }
     }
 
     private void FinalizarCrafteo()
     {
-        if (panelCrafteoUI != null)
-        {
-            panelCrafteoUI.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        // Oculta el aviso de "Ve a tu escritorio..."
+        if (InventarioUI.Instance != null)
+            InventarioUI.Instance.OcultarAvisoArmar();
+
+        // Oculta los modelos de armado sobre la mesa
+        pasoActual = 0;
+        ActualizarVisualesPasos();
+
+        if (mesaActual != null)
+            mesaActual.SalirDeMesa(true);
 
         OnTrampaArmada?.Invoke();
         onTrampaCompletada?.Invoke();
