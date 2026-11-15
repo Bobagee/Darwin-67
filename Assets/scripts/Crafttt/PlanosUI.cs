@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlanoDesplegableUI : MonoBehaviour, IPointerClickHandler
+public class PlanosUI : MonoBehaviour, IPointerClickHandler
 {
     [Header("Tamaños del Plano (Editable en Inspector)")]
     [SerializeField] private Vector2 tamanoContraido = new Vector2(180f, 180f);
