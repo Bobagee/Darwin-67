@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 90bbcecdea2de744e8c65be1312d6991
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 110028
+  packageName: Hamstercage
+  packageVersion: 2.2
+  assetPath: Assets/HamsterCage/install_RP_Versions.txt
+  uploadId: 750118
