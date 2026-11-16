@@ -747,7 +747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 269af5813dffb3542a5e6a9920be627c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotonCargarEscena
-  nombreEscena: Luz
+  nombreEscena: Level 1
 --- !u!114 &468271010
 MonoBehaviour:
   m_ObjectHideFlags: 0
