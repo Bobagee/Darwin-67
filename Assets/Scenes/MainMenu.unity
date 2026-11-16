@@ -748,7 +748,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotonCargarEscena
   nombreEscena: Luz
-  boton: {fileID: 0}
 --- !u!114 &468271010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,7 +1021,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BotonCambiarPanel
   panelAMostrar: {fileID: 67310939}
   panelAOcultar: {fileID: 1517652919}
-  boton: {fileID: 0}
 --- !u!114 &590517448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1598,7 +1596,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BotonCambiarPanel
   panelAMostrar: {fileID: 953407528}
   panelAOcultar: {fileID: 67310939}
-  boton: {fileID: 0}
 --- !u!114 &755410163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2026,7 +2023,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BotonCambiarPanel
   panelAMostrar: {fileID: 67310939}
   panelAOcultar: {fileID: 953407528}
-  boton: {fileID: 0}
 --- !u!114 &979730764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2774,7 +2770,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BotonCambiarPanel
   panelAMostrar: {fileID: 1517652919}
   panelAOcultar: {fileID: 67310939}
-  boton: {fileID: 0}
 --- !u!114 &1557123466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3648,7 +3643,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21a8f9e104024a645942bbe71f311a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BotonSalir
-  boton: {fileID: 0}
 --- !u!114 &2005737829
 MonoBehaviour:
   m_ObjectHideFlags: 0
