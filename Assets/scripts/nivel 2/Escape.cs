@@ -1,34 +1,32 @@
+using System;
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
-public class Escape : Iteraccion
+public class Escape : MonoBehaviour
 {
-    [Header("Requisitos de Escape")]
-    [SerializeField] private ItemTipo requiredItem = ItemTipo.Desarmador;
-    [SerializeField] private int requiredClicks = 3;
+    public static Escape Instance { get; private set; }
 
-    private int currentClicks = 0;
-    private static HashSet<ItemTipo> inventoryReference = new HashSet<ItemTipo>();
+    [Header("Configuración de Escenas")]
+    [SerializeField] private string nombreSiguienteEscena = "Nivel2";
 
-    public static void RegisterItemInInventory(ItemTipo tipo)
+    public static event Action OnTrapFailed;
+
+    private void Awake()
     {
-        inventoryReference.Add(tipo);
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    public override void Interactuar()
+    public static void NotificarTrampaFallida()
     {
-        if (!inventoryReference.Contains(requiredItem))
-        {
-            Debug.Log("Necesitas el Desarmador para abrir la escotilla.");
-            return;
-        }
+        OnTrapFailed?.Invoke();
+    }
 
-        currentClicks++;
-        Debug.Log($"Desatornillando escotilla: {currentClicks}/{requiredClicks}");
-
-        if (currentClicks >= requiredClicks)
+    public void CompletarNivel()
+    {
+        if (!string.IsNullOrEmpty(nombreSiguienteEscena))
         {
-            Debug.Log("¡Escotilla abierta! Escape completado.");
+            SceneManager.LoadScene(nombreSiguienteEscena);
         }
     }
 }
