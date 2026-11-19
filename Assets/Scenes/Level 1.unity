@@ -4839,7 +4839,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::sistemaCrafteo
   panelMesaCrafteoUI: {fileID: 0}
   piezasArrastrables: []
-  pasos3DEnMesa: []
+  pasos3DEnMesa:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   onTrampaCompletada:
     m_PersistentCalls:
       m_Calls:
@@ -6685,6 +6688,87 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &794323965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 794323967}
+  - component: {fileID: 794323966}
+  m_Layer: 0
+  m_Name: sistemaCrafteo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &794323966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794323965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0d1fc4b673b4054798361085a2ffaa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::sistemaCrafteo
+  panelMesaCrafteoUI: {fileID: 0}
+  piezasArrastrables:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  pasos3DEnMesa:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  onTrampaCompletada:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: TrapController, Assembly-CSharp
+        m_MethodName: ConfirmarCrafteo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!4 &794323967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794323965}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.65769, y: 0.55551, z: -5.52}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &798047275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11935,7 +12019,7 @@ MonoBehaviour:
   camaraMesa: {fileID: 663237231}
   playerController: {fileID: 596723900}
   promptBuildTrapUI: {fileID: 1331739538}
-  sistemaCraft: {fileID: 0}
+  sistemaCraft: {fileID: 596723899}
   colorBrillo: {r: 1, g: 0.9, b: 0.4, a: 1}
   intensidadBrillo: 1.2
   teclaSalirMesa: 27
@@ -12166,7 +12250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93369f8378070b043b27701160fa3777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ZonaEnsamblajeUI
-  sistemaCraft: {fileID: 0}
+  sistemaCraft: {fileID: 596723899}
 --- !u!114 &1316112056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13749,7 +13833,7 @@ Transform:
   m_GameObject: {fileID: 1467136917}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -10.55, z: 0}
+  m_LocalPosition: {x: 0, y: -6.78, z: 0}
   m_LocalScale: {x: 56.220722, y: 0.1197164, z: 56.220722}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19789,7 +19873,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.61363536, y: 1, z: 1.5533766}
+  m_Size: {x: 0.61363536, y: 0.15, z: 1.5533766}
   m_Center: {x: 0.19318208, y: 0, z: 0.27668974}
 --- !u!1001 &2047542042
 PrefabInstance:
@@ -20860,15 +20944,15 @@ PrefabInstance:
       objectReference: {fileID: 1096563615}
     - target: {fileID: 7910570105251427906, guid: 2c1efda26a1d407498648dfb55ada93d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.75
+      value: 0.52461
       objectReference: {fileID: 0}
     - target: {fileID: 7910570105251427906, guid: 2c1efda26a1d407498648dfb55ada93d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.75
+      value: 0.52461
       objectReference: {fileID: 0}
     - target: {fileID: 7910570105251427906, guid: 2c1efda26a1d407498648dfb55ada93d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.75
+      value: 0.52461
       objectReference: {fileID: 0}
     - target: {fileID: 7910570105251427906, guid: 2c1efda26a1d407498648dfb55ada93d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20876,7 +20960,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7910570105251427906, guid: 2c1efda26a1d407498648dfb55ada93d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.395
+      value: -0.034375
       objectReference: {fileID: 0}
     - target: {fileID: 7910570105251427906, guid: 2c1efda26a1d407498648dfb55ada93d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -20971,3 +21055,4 @@ SceneRoots:
   - {fileID: 1287507797}
   - {fileID: 1596047188}
   - {fileID: 1467136921}
+  - {fileID: 794323967}
