@@ -139,9 +139,9 @@ public void ConfirmarCrafteo()
         haciaJugador.y = 0f;
         Vector3 dir = haciaJugador.sqrMagnitude > 0.0001f ? haciaJugador.normalized : raton.transform.forward;
 
-        Vector3 pos = posRaton + dir * separacionDelRaton;
+        Vector3 pos = posRaton + dir * separacion; 
 
-        
+
         float yPiso = raton.transform.position.y;
         pos.y = yPiso;
         if (ajustarAlSuelo && Physics.Raycast(new Vector3(pos.x, yPiso + 0.5f, pos.z), Vector3.down, out RaycastHit hit, 1.5f,
@@ -152,6 +152,7 @@ public void ConfirmarCrafteo()
 
         trampa.transform.position = pos;
         trampa.SetActive(true);
+        Debug.Log($"[Trampa] base={posRaton} trampa={pos} darwin={raton.transform.position}");
         colocada = true;
 
         // El queso se usa como cebo: si falla, hay que recoger el queso extra

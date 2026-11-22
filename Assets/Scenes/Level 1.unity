@@ -388,9 +388,9 @@ MonoBehaviour:
   - {fileID: 498618678}
   - {fileID: 1447113868}
   - {fileID: 639686074}
-  zoneDuration: 25
+  zoneDuration: 12
   fadeSpeed: 5
-  maxAlpha: 0.45
+  maxAlpha: 0.2
 --- !u!1001 &74611623
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5672,7 +5672,7 @@ MonoBehaviour:
   separacionDelRaton: 3
   colocarCercaDeHuellas: 1
   zonaHuellas: {fileID: 55610157}
-  separacionDeHuellas: 1
+  separacionDeHuellas: 0.5
   ajustarAlSuelo: 1
   capaSuelo:
     serializedVersion: 2
@@ -8605,7 +8605,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -86, y: 117}
+  m_AnchoredPosition: {x: -337, y: 315}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &904881201
@@ -8628,7 +8628,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Trampa Lista\n\nPresiona \"G\" para colocarla cerca de donde este el rat\xF3n"
+  m_text: 'Trampa Lista
+
+
+    Presiona "G" para colocarla cerca de las huellas'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8878,7 +8881,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
   tipoObjeto: 0
-  reaparecerSiFallaTrampa: 0
+  reaparecerSiFallaTrampa: 1
   colorBrillo: {r: 1, g: 0.9, b: 0.4, a: 1}
   intensidadBrillo: 0.25
   luzOContornoOpcional: {fileID: 97175137}
@@ -9715,15 +9718,15 @@ MonoBehaviour:
   jugador: {fileID: 153044503}
   puntoEscape: {fileID: 701358454}
   zonaHuellas: {fileID: 55610157}
-  distanciaAlejamiento: 3
-  velocidad: 3.67
+  distanciaAlejamiento: 4
+  velocidad: 5.5
   velocidadHuida: 9.67
   distanciaLlegada: 0.1
   velocidadGiro: 10
-  tiempoParaMorder: 1
-  ventanaMin: 3
-  ventanaMax: 5
-  tiempoOculto: 6
+  tiempoParaMorder: 0.55
+  ventanaMin: 1.5
+  ventanaMax: 2.5
+  tiempoOculto: 4
 --- !u!23 &1006383816
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11906,7 +11909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
   tipoObjeto: 3
-  reaparecerSiFallaTrampa: 1
+  reaparecerSiFallaTrampa: 0
   colorBrillo: {r: 1, g: 0.9, b: 0.4, a: 1}
   intensidadBrillo: 1.5
   luzOContornoOpcional: {fileID: 1744613525}
@@ -18626,7 +18629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
   tipoObjeto: 3
-  reaparecerSiFallaTrampa: 1
+  reaparecerSiFallaTrampa: 0
   colorBrillo: {r: 1, g: 0.9, b: 0.4, a: 1}
   intensidadBrillo: 1.5
   luzOContornoOpcional: {fileID: 0}
