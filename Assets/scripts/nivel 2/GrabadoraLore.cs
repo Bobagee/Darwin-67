@@ -3,46 +3,100 @@ using UnityEngine;
 public class GrabadoraLore : MonoBehaviour
 {
     [Header("Contenido de esta Grabadora")]
-    [Tooltip("Arrastra el dibujo de la grabadora con la hoja (en graybox puedes dejar el placeholder del panel)")]
+    [Tooltip("Arrastra la imagen de la grabadora con la hoja y el texto ya dibujado")]
     [SerializeField] private Sprite dibujoGrabadora;
-    [TextArea(5, 12)]
-    [SerializeField] private string textoTranscripcion = "Grabación #01: El sujeto 67 logró escapar de la jaula...";
     [SerializeField] private AudioClip clipGrabacion;
 
-    [Header("Interacción")]
+    [Header("Interacción y Resplandor")]
+    [SerializeField] private float distanciaBrillo = 4.5f;
     [SerializeField] private float distanciaInteractuar = 2.5f;
     [Range(15f, 90f)]
-    [SerializeField] private float anguloMirada = 55f;
+    [SerializeField] private float anguloMirada = 50f;
     [SerializeField] private KeyCode teclaInteractuar = KeyCode.E;
+
+    [Header("Visual del Brillo")]
+    [SerializeField] private Color colorBrillo = new Color(1f, 0.85f, 0.3f, 1f);
+    [SerializeField] private float intensidadBrillo = 1.5f;
+    [SerializeField] private Light luzOpcional;
 
     private Transform referenciaJugador;
     private Camera camaraPrincipal;
+    private Renderer[] renderers;
+    private Color[] coloresOriginales;
+    private bool brillando = false;
 
-    private void Start()
-    {
-        camaraPrincipal = Camera.main;
-        if (camaraPrincipal != null)
+  private void Start()
+{
+    camaraPrincipal = Camera.main;
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
+    if (player != null)
+        referenciaJugador = player.transform;
+    else if (camaraPrincipal != null)
+        referenciaJugador = camaraPrincipal.transform;
+        renderers = GetComponentsInChildren<Renderer>();
+        coloresOriginales = new Color[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
         {
-            referenciaJugador = camaraPrincipal.transform;
+            if (renderers[i].material.HasProperty("_BaseColor"))
+                coloresOriginales[i] = renderers[i].material.GetColor("_BaseColor");
+            else if (renderers[i].material.HasProperty("_Color"))
+                coloresOriginales[i] = renderers[i].material.color;
         }
-        else
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null) referenciaJugador = player.transform;
-        }
+
+        if (luzOpcional != null) luzOpcional.enabled = false;
     }
 
     private void Update()
     {
         if (referenciaJugador == null) return;
-        if (VisorGrabadora.Instancia != null && VisorGrabadora.Instancia.EstaAbierto) return;
+
+        bool visorAbierto = VisorGrabadora.Instancia != null && VisorGrabadora.Instancia.EstaAbierto;
+        if (visorAbierto)
+        {
+            ActualizarBrillo(false);
+            return;
+        }
 
         float distancia = Vector3.Distance(referenciaJugador.position, transform.position);
-        if (distancia <= distanciaInteractuar && Input.GetKeyDown(teclaInteractuar))
+        bool mirando = MirandoGrabadora();
+
+        // Brilla al acercarte y mirarla
+        ActualizarBrillo(distancia <= distanciaBrillo && mirando);
+
+        // Se activa con E cuando estás lo bastante cerca y mirándola
+        if (distancia <= distanciaInteractuar && mirando && Input.GetKeyDown(teclaInteractuar))
         {
-            if (MirandoGrabadora())
+            Activar();
+        }
+    }
+
+    private void ActualizarBrillo(bool activar)
+    {
+        if (brillando == activar) return;
+        brillando = activar;
+
+        if (luzOpcional != null)
+            luzOpcional.enabled = activar;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] == null) continue;
+            Material mat = renderers[i].material;
+
+            if (activar)
             {
-                Activar();
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor", colorBrillo * intensidadBrillo);
+                if (mat.HasProperty("_BaseColor"))
+                    mat.SetColor("_BaseColor", Color.Lerp(coloresOriginales[i], colorBrillo, 0.35f));
+            }
+            else
+            {
+                mat.SetColor("_EmissionColor", Color.black);
+                mat.DisableKeyword("_EMISSION");
+                if (mat.HasProperty("_BaseColor"))
+                    mat.SetColor("_BaseColor", coloresOriginales[i]);
             }
         }
     }
@@ -56,9 +110,11 @@ public class GrabadoraLore : MonoBehaviour
 
     public void Activar()
     {
+        ActualizarBrillo(false);
+
         if (VisorGrabadora.Instancia != null)
         {
-            VisorGrabadora.Instancia.ReproducirGrabadora(dibujoGrabadora, textoTranscripcion, clipGrabacion);
+            VisorGrabadora.Instancia.ReproducirGrabadora(dibujoGrabadora, clipGrabacion);
         }
     }
 }

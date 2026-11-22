@@ -1,95 +1,224 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-public class Ventila : Iteraccion
+public class Ventila : MonoBehaviour
 {
-    [Header("Requisitos")]
-    [SerializeField] private string idDesarmadorRequerido = "Desarmador";
+    [Header("Requisito e Interacción")]
+    [Tooltip("Opcional: arrastra el objeto Desarmador de la escena; se pedirá que ya lo hayas recogido (desactivado)")]
+    [SerializeField] private GameObject objetoDesarmadorEnEscena;
+    [SerializeField] private bool exigirDesarmador = true;
+    [SerializeField] private KeyCode teclaInteractuar = KeyCode.E;
+    [SerializeField] private float distanciaInteractuar = 3.0f;
 
-    [Header("Configuración de Tornillos")]
-    [SerializeField] private int cantidadTornillos = 4;
+    [Header("Tornillos (4 objetos con Collider)")]
+    [SerializeField] private GameObject[] objetosTornillos = new GameObject[4];
     [SerializeField] private int clicsPorTornillo = 3;
-    [Tooltip("Opcional: Arrastra aquí los 4 modelos 3D de los tornillos para que desaparezcan uno a uno")]
-    [SerializeField] private GameObject[] objetosTornillos;
 
-    [Header("Animación y Eventos")]
+    [Header("Cámara frente a la Ventila")]
+    [Tooltip("Crea un objeto vacío justo frente a la ventila mirando hacia los tornillos y arrástralo aquí")]
+    [SerializeField] private Transform puntoCamaraVentila;
+    [SerializeField] private MonoBehaviour scriptMovimientoJugador;
+
+    [Header("Alerta al quitar el 1er Tornillo")]
+    [SerializeField] private float tiempoParaHuir = 10f;
+    [SerializeField] private Patrulla patrullaGuardia;
+    [SerializeField] private Transform luzGuardia;
+
+    [Header("Brillo al Acercarse")]
+    [SerializeField] private float distanciaBrillo = 4f;
+    [SerializeField] private Color colorBrillo = new Color(1f, 0.85f, 0.3f, 1f);
+    [SerializeField] private float intensidadBrillo = 1.5f;
+
+    [Header("Animación y Eventos de Escape")]
     [SerializeField] private Animator animadorEscotilla;
-    public UnityEvent onClicDesarmador;
-    public UnityEvent onTornilloQuitado;
-    public UnityEvent onVentilaAbierta;
+    [Tooltip("Opcional: arrastra aquí el panel de victoria si quieres que se active al escapar")]
+    [SerializeField] private GameObject panelVictoria;
+    [SerializeField] private UnityEvent onPrimerTornilloQuitado;
+    [SerializeField] private UnityEvent onVentilaAbierta;
 
-[Header("UI de Interacción")]
-[Tooltip("Texto en Canvas que dice: CLICKEA 3 VECES PARA DESARMAR")]
-[SerializeField] private GameObject cartelDesarmarUI;
-
-public override void OnMirar(bool mirando)
-{
-    if (cartelDesarmarUI == null) return;
-
-    bool tieneDesarmador = InventarioUI.Instance != null && InventarioUI.Instance.TieneObjeto(idDesarmadorRequerido);
-    cartelDesarmarUI.SetActive(mirando && tieneDesarmador && !abierta);
-}
-
+    private int[] clicsPorCadaTornillo;
     private int tornillosQuitados = 0;
-    private int clicsTornilloActual = 0;
+    private bool modoDesarmarActivo = false;
+    private bool alertaIniciada = false;
     private bool abierta = false;
+    private float timerEscape;
 
-    public override void Interactuar()
+    private Transform playerTransform;
+    private Camera camaraPrincipal;
+    private Renderer[] renderers;
+    private bool brillando = false;
+
+    private void Start()
+    {
+        camaraPrincipal = Camera.main;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null) playerTransform = player.transform;
+
+        clicsPorCadaTornillo = new int[objetosTornillos.Length];
+        renderers = GetComponentsInChildren<Renderer>();
+        timerEscape = tiempoParaHuir;
+    }
+
+    private void Update()
     {
         if (abierta) return;
 
-        // 1. Verificar que el jugador tenga el desarmador
-        if (InventarioUI.Instance == null || !InventarioUI.Instance.TieneObjeto(idDesarmadorRequerido))
+        Transform refPos = playerTransform != null ? playerTransform : (camaraPrincipal != null ? camaraPrincipal.transform : null);
+
+        // 1. Brillo e interacción con tecla E al acercarse
+        if (!modoDesarmarActivo && refPos != null)
         {
-            Debug.Log("Necesitas el Desarmador para quitar los tornillos.");
-            return;
+            float dist = Vector3.Distance(refPos.position, transform.position);
+            ActualizarBrillo(dist <= distanciaBrillo);
+
+            if (dist <= distanciaInteractuar && Input.GetKeyDown(teclaInteractuar))
+            {
+                Interactuar();
+            }
         }
 
-        // 2. Sumar clic al tornillo actual
-        clicsTornilloActual++;
-        onClicDesarmador?.Invoke();
-        Debug.Log($"Tornillo {tornillosQuitados + 1}/{cantidadTornillos} -> Clic {clicsTornilloActual}/{clicsPorTornillo}");
-
-        // 3. Si completó los 3 clics, quitar ese tornillo
-        if (clicsTornilloActual >= clicsPorTornillo)
+        // 2. Modo minijuego frente a los tornillos
+        if (modoDesarmarActivo)
         {
-            clicsTornilloActual = 0;
+            ActualizarBrillo(false);
 
-            // Apaga el objeto visual del tornillo si fue asignado en el Inspector
-            if (objetosTornillos != null && tornillosQuitados < objetosTornillos.Length)
+            if (Input.GetMouseButtonDown(0))
             {
-                if (objetosTornillos[tornillosQuitados] != null)
-                {
-                    objetosTornillos[tornillosQuitados].SetActive(false);
-                }
+                DetectarClicEnTornillo();
             }
 
-            tornillosQuitados++;
-            onTornilloQuitado?.Invoke();
-            Debug.Log($"¡Tornillo retirado! ({tornillosQuitados}/{cantidadTornillos})");
-
-            // 4. Si ya quitó los 4 tornillos, abrir ventila y terminar nivel
-            if (tornillosQuitados >= cantidadTornillos)
+            if (alertaIniciada)
             {
-                AbrirVentila();
+                timerEscape -= Time.deltaTime;
+
+                if (luzGuardia != null)
+                {
+                    Quaternion rotObjetivo = Quaternion.LookRotation((transform.position - luzGuardia.position).normalized);
+                    luzGuardia.rotation = Quaternion.Slerp(luzGuardia.rotation, rotObjetivo, Time.deltaTime * 5f);
+                }
+
+                if (timerEscape <= 0f)
+                {
+                    ReiniciarNivel();
+                }
             }
         }
     }
 
-    private void AbrirVentila()
+    public void Interactuar()
     {
-        abierta = true;
+        if (abierta || modoDesarmarActivo) return;
 
-        if (animadorEscotilla != null)
+        // Si se exige desarmador y aún está tirado en la escena (activo), no permite abrir
+        if (exigirDesarmador && objetoDesarmadorEnEscena != null && objetoDesarmadorEnEscena.activeInHierarchy)
         {
-            animadorEscotilla.SetTrigger("Abrir");
+            Debug.Log("Necesitas recoger el Desarmador primero.");
+            return;
         }
 
-        onVentilaAbierta?.Invoke();
+        EntrarModoVentila();
+    }
 
-        if (Escape.Instance != null)
+    private void EntrarModoVentila()
+    {
+        modoDesarmarActivo = true;
+
+        if (scriptMovimientoJugador != null)
+            scriptMovimientoJugador.enabled = false;
+
+        if (camaraPrincipal != null && puntoCamaraVentila != null)
         {
-            Escape.Instance.CompletarNivel();
+            camaraPrincipal.transform.SetParent(null);
+            camaraPrincipal.transform.position = puntoCamaraVentila.position;
+            camaraPrincipal.transform.rotation = puntoCamaraVentila.rotation;
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private void DetectarClicEnTornillo()
+    {
+        if (camaraPrincipal == null) return;
+
+        Ray rayo = camaraPrincipal.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(rayo, out RaycastHit hit, 5f))
+        {
+            for (int i = 0; i < objetosTornillos.Length; i++)
+            {
+                if (objetosTornillos[i] != null && objetosTornillos[i].activeSelf &&
+                    (hit.collider.gameObject == objetosTornillos[i] || hit.collider.transform.IsChildOf(objetosTornillos[i].transform)))
+                {
+                    clicsPorCadaTornillo[i]++;
+
+                    if (clicsPorCadaTornillo[i] >= clicsPorTornillo)
+                    {
+                        objetosTornillos[i].SetActive(false);
+                        tornillosQuitados++;
+
+                        if (!alertaIniciada)
+                        {
+                            alertaIniciada = true;
+                            timerEscape = tiempoParaHuir;
+                            onPrimerTornilloQuitado?.Invoke();
+
+                            if (patrullaGuardia != null)
+                                patrullaGuardia.InvestigateNoise(transform.position);
+                        }
+
+                        if (tornillosQuitados >= objetosTornillos.Length)
+                        {
+                            AbrirYHuir();
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private void AbrirYHuir()
+    {
+        abierta = true;
+        modoDesarmarActivo = false;
+
+        if (animadorEscotilla != null)
+            animadorEscotilla.SetTrigger("Abrir");
+
+        if (panelVictoria != null)
+            panelVictoria.SetActive(true);
+
+        onVentilaAbierta?.Invoke();
+    }
+
+    private void ReiniciarNivel()
+    {
+        abierta = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void ActualizarBrillo(bool activar)
+    {
+        if (brillando == activar) return;
+        brillando = activar;
+
+        foreach (Renderer r in renderers)
+        {
+            if (r == null) continue;
+            Material mat = r.material;
+            if (activar)
+            {
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor", colorBrillo * intensidadBrillo);
+            }
+            else
+            {
+                mat.SetColor("_EmissionColor", Color.black);
+                mat.DisableKeyword("_EMISSION");
+            }
         }
     }
 }

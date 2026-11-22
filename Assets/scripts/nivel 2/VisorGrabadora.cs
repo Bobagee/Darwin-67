@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class VisorGrabadora : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class VisorGrabadora : MonoBehaviour
     [Header("Interfaz de Grabadora")]
     [SerializeField] private GameObject panelGrabadora;
     [SerializeField] private Image imagenGrabadoraYHoja;
-    [SerializeField] private TMP_Text textoTranscripcion;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -40,7 +38,7 @@ public class VisorGrabadora : MonoBehaviour
         }
     }
 
-    public void ReproducirGrabadora(Sprite dibujoGrabadora, string transcripcion, AudioClip clip)
+    public void ReproducirGrabadora(Sprite dibujoGrabadora, AudioClip clip)
     {
         if (panelGrabadora == null) return;
 
@@ -52,9 +50,6 @@ public class VisorGrabadora : MonoBehaviour
             imagenGrabadoraYHoja.sprite = dibujoGrabadora;
             imagenGrabadoraYHoja.preserveAspect = true;
         }
-
-        if (textoTranscripcion != null)
-            textoTranscripcion.text = transcripcion;
 
         if (audioSource != null)
         {
