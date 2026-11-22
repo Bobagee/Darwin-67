@@ -60,7 +60,7 @@ public class Ventila : MonoBehaviour
         timerEscape = tiempoParaHuir;
     }
 
-    private void Update()
+   private void Update()
     {
         if (abierta) return;
 
@@ -72,9 +72,13 @@ public class Ventila : MonoBehaviour
             float dist = Vector3.Distance(refPos.position, transform.position);
             ActualizarBrillo(dist <= distanciaBrillo);
 
-            if (dist <= distanciaInteractuar && Input.GetKeyDown(teclaInteractuar))
+            if (Input.GetKeyDown(teclaInteractuar))
             {
-                Interactuar();
+                Debug.Log($"[Ventila] Tecla E presionada. Distancia actual: {dist:F2} / Máxima: {distanciaInteractuar}");
+                if (dist <= distanciaInteractuar)
+                {
+                    Interactuar();
+                }
             }
         }
 
@@ -82,6 +86,13 @@ public class Ventila : MonoBehaviour
         if (modoDesarmarActivo)
         {
             ActualizarBrillo(false);
+
+            // Fuerza la cámara a quedarse en el punto y mirar directo a la ventila cada frame
+            if (camaraPrincipal != null && puntoCamaraVentila != null)
+            {
+                camaraPrincipal.transform.position = puntoCamaraVentila.position;
+                camaraPrincipal.transform.LookAt(transform.position);
+            }
 
             if (Input.GetMouseButtonDown(0))
             {
