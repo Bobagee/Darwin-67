@@ -4862,17 +4862,29 @@ MonoBehaviour:
   onTrampaCompletada:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 938271fa046591c47beaad6923d3f759, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
+      - m_Target: {fileID: 633985915}
+        m_TargetAssemblyTypeName: TrapController, Assembly-CSharp
+        m_MethodName: ConfirmarCrafteo
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 181182745}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &596723900
 MonoBehaviour:
@@ -5301,8 +5313,8 @@ MonoBehaviour:
   jugador: {fileID: 153044503}
   trampa: {fileID: 491185616}
   teclaColocar: 103
-  distanciaMaxColocacion: 6.7
-  separacionDelRaton: 0.5
+  distanciaMaxColocacion: 4.5
+  separacionDelRaton: 1.5
   ajustarAlSuelo: 1
   capaSuelo:
     serializedVersion: 2
@@ -6002,7 +6014,7 @@ Transform:
   m_GameObject: {fileID: 701358453}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.9, y: -0.12, z: -9.08}
+  m_LocalPosition: {x: 19.514, y: -1.1, z: -0.636}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9257,7 +9269,7 @@ Transform:
   m_GameObject: {fileID: 1006383814}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.2, y: 0.07, z: 0.31686}
+  m_LocalPosition: {x: 16.646, y: -1.1, z: 1.335}
   m_LocalScale: {x: 0.38, y: 0.38, z: 0.38}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10956,7 +10968,7 @@ Transform:
   m_GameObject: {fileID: 1156184856}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.694, y: -1.251, z: -5.846}
+  m_LocalPosition: {x: 2.694, y: -1.1, z: -5.846}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16287,7 +16299,7 @@ Transform:
   m_GameObject: {fileID: 1698552699}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.586, y: -1.271, z: 3.082}
+  m_LocalPosition: {x: 3.586, y: -1.1, z: 3.082}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20145,7 +20157,7 @@ Transform:
   m_GameObject: {fileID: 2017543814}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.269, y: -1.162, z: 1.834}
+  m_LocalPosition: {x: -3.269, y: -1.1, z: 1.834}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
