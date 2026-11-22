@@ -1636,7 +1636,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &181182746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5668,8 +5668,11 @@ MonoBehaviour:
   jugador: {fileID: 153044503}
   trampa: {fileID: 491185616}
   teclaColocar: 103
-  distanciaMaxColocacion: 4.5
-  separacionDelRaton: 1.5
+  distanciaMaxColocacion: 1.5
+  separacionDelRaton: 3
+  colocarCercaDeHuellas: 1
+  zonaHuellas: {fileID: 55610157}
+  separacionDeHuellas: 1
   ajustarAlSuelo: 1
   capaSuelo:
     serializedVersion: 2
