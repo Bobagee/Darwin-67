@@ -837,9 +837,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 137415865}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 85, y: 149}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -264, y: 0}
   m_SizeDelta: {x: 500, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &116304780
@@ -928,7 +928,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -168.34457, y: 0, z: 0, w: 0}
+  m_margin: {x: 351.58765, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1113,6 +1113,7 @@ RectTransform:
   - {fileID: 1612816314}
   - {fileID: 78357030}
   - {fileID: 899362474}
+  - {fileID: 531502655}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3475,6 +3476,143 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1109807306562387009, guid: f2ef2020063b0a0489eb5cceb5eed127, type: 3}
   m_PrefabInstance: {fileID: 401096805}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &415213998
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 415213999}
+  - component: {fileID: 415214001}
+  - component: {fileID: 415214000}
+  m_Layer: 5
+  m_Name: TextoSubtitulos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &415213999
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415213998}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 531502655}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &415214000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415213998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: New Text
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 15
+  m_fontSizeBase: 15
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: -132.36472, y: 0, z: -200.17451, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &415214001
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415213998}
+  m_CullTransparentMesh: 1
 --- !u!1 &418625964
 GameObject:
   m_ObjectHideFlags: 0
@@ -4595,6 +4733,82 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e8d6df31b4c86c34f954726aaa4be426, type: 3}
   m_PrefabInstance: {fileID: 524531345}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &531502654
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 531502655}
+  - component: {fileID: 531502657}
+  - component: {fileID: 531502656}
+  m_Layer: 5
+  m_Name: "PanelSubt\xEDtulos"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &531502655
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531502654}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 415213999}
+  m_Father: {fileID: 137415865}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 70}
+  m_SizeDelta: {x: 1200, y: 90}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &531502656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531502654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &531502657
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531502654}
+  m_CullTransparentMesh: 1
 --- !u!1 &533788103
 GameObject:
   m_ObjectHideFlags: 0
@@ -4640,6 +4854,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: Decir
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: bffc260cc1d41b44590e7e0cd24779c8, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   quesoExtraPrefab: {fileID: 5465879242696572152, guid: edcea4614ae86d342a86d04bfc346c6d, type: 3}
   alturaQueso: 0.3
   alSoltarQueso:
@@ -4657,10 +4883,34 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: DecirBurlaDarwin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: DecirReaccionAleksAlFallar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   dibujoBurla: {fileID: 1540774411}
   duracionDibujo: 3
-  fuenteAudio: {fileID: 1506830594}
-  sonidoBurla: {fileID: 8300000, guid: 7b0537b2017a4ac4db814ebe726257c3, type: 3}
+  fuenteAudio: {fileID: 0}
+  sonidoBurla: {fileID: 0}
 --- !u!4 &533788105
 Transform:
   m_ObjectHideFlags: 0
@@ -5241,6 +5491,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: Decir
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: a7592f711911a384096d1c6d9b6094ec, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &596723900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5703,6 +5965,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: Decir
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: d186c29c2f3a4d04fbec85a2bfac1dfb, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7737,6 +8011,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: Decir
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: c03024d3bd5cb05499d1e184ebf0198c, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &843028049
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8378,7 +8664,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -132}
+  m_AnchoredPosition: {x: 0, y: 152}
   m_SizeDelta: {x: 500, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &899362475
@@ -8895,6 +9181,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: Decir
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 7be3dbd091f5baa4cb762207414b3506, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -11928,6 +12226,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: Decir
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: cd94a287efaf801478f8eb2c57163e18, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &1197830575
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12076,6 +12386,223 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4533403331583680, guid: f5ce0121a3a3c496f800967d31cc8950, type: 3}
   m_PrefabInstance: {fileID: 1212474226}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1212876713
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1212876716}
+  - component: {fileID: 1212876715}
+  - component: {fileID: 1212876714}
+  m_Layer: 0
+  m_Name: Voz
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1212876714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212876713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 768ece909507eee4a93751aaa40696d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Voz
+  fuente: {fileID: 1212876715}
+  panelSubtitulos: {fileID: 531502654}
+  textoSubtitulos: {fileID: 415214000}
+  lineas:
+  - audio: {fileID: 8300000, guid: 0c63d27f35df7a046a9cf9349484f8e9, type: 3}
+    subtitulo: "ALEKS: \"*suspiros* Hehehe, 166 intentos fallidos, 166\u2026 Pero
+      hoy, la ciencia y la alta cocina se arrodillan ante m\xED. Darwin 2 no es un
+      simple roedor, es mi obra maestra, \xA1el chef perfecto!\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: 9abd1ed81b7edca40a25dc4128438ff5, type: 3}
+    subtitulo: "ALEKS: \"Aunque\u2026 Tiene un ligero defecto de ACTITUD. \xA1Cree
+      que es m\xE1s listo que yo! Ja\u2026 \xA1Hoy le ense\xF1ar\xE9 qui\xE9n manda
+      en este laboratorio!\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: c03024d3bd5cb05499d1e184ebf0198c, type: 3}
+    subtitulo: "ALEKS: \"Esta varilla servir\xE1 de soporte, f\xEDsica b\xE1sica.\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: 7be3dbd091f5baa4cb762207414b3506, type: 3}
+    subtitulo: "ALEKS: \"Una caja resistente\u2026 Perfecta para contener un ego
+      de ese tama\xF1o.\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: 516ce837f6581184e88fb0b632ad687f, type: 3}
+    subtitulo: "ALEKS: \"Jejejeje, un poco de hilo\u2026 \xA1Un tir\xF3n en el momento
+      exacto y se acab\xF3 tu espect\xE1culo!\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: cd94a287efaf801478f8eb2c57163e18, type: 3}
+    subtitulo: "ALEKS: \"Queso de primera calidad\u2026 \xA1Ning\xFAn rat\xF3n, por
+      chef que se crea, puede resistirse a esto!\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: a7592f711911a384096d1c6d9b6094ec, type: 3}
+    subtitulo: "ALEKS: \"\xA1Ja! \xA1Una obra maestra de ingenier\xEDa! Veamos qu\xE9
+      tan listo eres ahora\u2026\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: d186c29c2f3a4d04fbec85a2bfac1dfb, type: 3}
+    subtitulo: "ALEKS: \"Ahora me alejo despacio\u2026 Vamos peque\xF1o genio, \xA1cae
+      en la trampa!\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: bffc260cc1d41b44590e7e0cd24779c8, type: 3}
+    subtitulo: "ALEKS: \"\xA1TE TENGO! Jijijiji, \xBFqui\xE9n es el genio ahora,
+      eh? \xA1De vuelta a la jaula!\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: 82c687b858b8a5b49a0f807ec7f556bd, type: 3}
+    subtitulo: "ALEKS: \"\xBF\xA1Qu\xE9!? \xBFSe llev\xF3 el queso y dej\xF3 otro
+      pedazo? \xBFMe est\xE1 humillando?\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: d66ec16baff07844784768680dd30a09, type: 3}
+    subtitulo: "ALEKS: \"\xA1Deja de re\xEDrte, bola de pelos! Yo te di ese cerebro
+      y yo te lo puedo quitar.\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: 6736e3b30bcbb1c47a404e07e75ae17e, type: 3}
+    subtitulo: "ALEKS: \"\t\xA1INACEPTABLE! \xA1Ning\xFAn experimento 167 se burla
+      de Aleks Sinra Alguacil!\""
+    repetible: 0
+  - audio: {fileID: 8300000, guid: 53e88f9b59cbd034bb07cb12f7d6d01e, type: 3}
+    subtitulo: "ALEKS: *risa mani\xE1tica*"
+    repetible: 0
+  - audio: {fileID: 8300000, guid: d02a1cd62a6f5f14cad465b7df226b39, type: 3}
+    subtitulo: 'DARWIN: *burla* '
+    repetible: 1
+  - audio: {fileID: 8300000, guid: 0698cc0ca0c17cf40bf9bce627f9a424, type: 3}
+    subtitulo: 'DARWIN: *burla*'
+    repetible: 0
+  - audio: {fileID: 8300000, guid: dc41d5f1858bf384db4c145441cff3d1, type: 3}
+    subtitulo: 'DARWIN: *burla*'
+    repetible: 0
+  reaccionesAleksAlFallar:
+  - {fileID: 8300000, guid: 82c687b858b8a5b49a0f807ec7f556bd, type: 3}
+  - {fileID: 8300000, guid: d66ec16baff07844784768680dd30a09, type: 3}
+  - {fileID: 8300000, guid: 6736e3b30bcbb1c47a404e07e75ae17e, type: 3}
+  - {fileID: 8300000, guid: 53e88f9b59cbd034bb07cb12f7d6d01e, type: 3}
+  burlasDarwin:
+  - {fileID: 8300000, guid: d02a1cd62a6f5f14cad465b7df226b39, type: 3}
+  - {fileID: 8300000, guid: 0698cc0ca0c17cf40bf9bce627f9a424, type: 3}
+  - {fileID: 8300000, guid: dc41d5f1858bf384db4c145441cff3d1, type: 3}
+  maxEnEspera: 2
+--- !u!82 &1212876715
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212876713}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1212876716
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212876713}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1223312892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12897,7 +13424,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -65, y: -132}
+  m_AnchoredPosition: {x: -65, y: 154}
   m_SizeDelta: {x: 500, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1331739540
@@ -14587,15 +15114,15 @@ RectTransform:
   m_GameObject: {fileID: 1468913551}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.84179336, y: 0.84179336, z: 0.84179336}
+  m_LocalScale: {x: 1.4818089, y: 1.4818089, z: 1.4818089}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1425703268}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 350, y: 177}
-  m_SizeDelta: {x: 60.8273, y: 66.1045}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -50, y: -135}
+  m_SizeDelta: {x: 60.8273, y: 66.10449}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1468913553
 MonoBehaviour:
@@ -21279,6 +21806,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1212876714}
+        m_TargetAssemblyTypeName: Voz, Assembly-CSharp
+        m_MethodName: Decir
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 516ce837f6581184e88fb0b632ad687f, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &2045061618
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22524,6 +23063,7 @@ SceneRoots:
   - {fileID: 1824997491}
   - {fileID: 55610156}
   - {fileID: 1613201493467815900}
+  - {fileID: 1212876716}
   - {fileID: 787212390}
   - {fileID: 1358224995}
   - {fileID: 599742119}
