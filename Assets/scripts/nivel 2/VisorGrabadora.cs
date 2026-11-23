@@ -32,7 +32,7 @@ public class VisorGrabadora : MonoBehaviour
     {
         if (!EstaAbierto || Time.frameCount == frameApertura) return;
 
-        if (Input.GetKeyDown(teclaCerrar))
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(teclaCerrar))
         {
             CerrarGrabadora();
         }

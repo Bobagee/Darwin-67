@@ -47,11 +47,31 @@ public class GrabadoraLore : MonoBehaviour
         if (luzOpcional != null) luzOpcional.enabled = false;
     }
 
+   private bool estaAbiertaEstaGrabadora = false;
+
     private void Update()
     {
         if (referenciaJugador == null) return;
 
         bool visorAbierto = VisorGrabadora.Instancia != null && VisorGrabadora.Instancia.EstaAbierto;
+
+        if (estaAbiertaEstaGrabadora)
+        {
+            ActualizarBrillo(false);
+
+            if (!visorAbierto)
+            {
+                estaAbiertaEstaGrabadora = false;
+                return;
+            }
+
+            if (Input.GetKeyDown(teclaInteractuar))
+            {
+                Cerrar();
+            }
+            return;
+        }
+
         if (visorAbierto)
         {
             ActualizarBrillo(false);
@@ -61,10 +81,8 @@ public class GrabadoraLore : MonoBehaviour
         float distancia = Vector3.Distance(referenciaJugador.position, transform.position);
         bool mirando = MirandoGrabadora();
 
-        // Brilla al acercarte y mirarla
         ActualizarBrillo(distancia <= distanciaBrillo && mirando);
 
-        // Se activa con E cuando estás lo bastante cerca y mirándola
         if (distancia <= distanciaInteractuar && mirando && Input.GetKeyDown(teclaInteractuar))
         {
             Activar();
@@ -108,13 +126,23 @@ public class GrabadoraLore : MonoBehaviour
         return Vector3.Angle(camaraPrincipal.transform.forward, dir) <= anguloMirada;
     }
 
-    public void Activar()
+   public void Activar()
     {
         ActualizarBrillo(false);
+        estaAbiertaEstaGrabadora = true;
 
         if (VisorGrabadora.Instancia != null)
         {
             VisorGrabadora.Instancia.ReproducirGrabadora(dibujoGrabadora, clipGrabacion);
+        }
+    }
+public void Cerrar()
+    {
+        estaAbiertaEstaGrabadora = false;
+
+        if (VisorGrabadora.Instancia != null)
+        {
+            VisorGrabadora.Instancia.CerrarGrabadora();
         }
     }
 }

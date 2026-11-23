@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
+using UnityEngine.AI;
+using UnityEngine.Playables;
+using System.Collections.Generic;
 
 public class Ventila : MonoBehaviour
 {
     [Header("Requisito e Interacción")]
-    [Tooltip("Opcional: arrastra el objeto Desarmador de la escena; se pedirá que ya lo hayas recogido (desactivado)")]
     [SerializeField] private GameObject objetoDesarmadorEnEscena;
     [SerializeField] private bool exigirDesarmador = true;
     [SerializeField] private KeyCode teclaInteractuar = KeyCode.E;
@@ -16,83 +18,125 @@ public class Ventila : MonoBehaviour
     [SerializeField] private int clicsPorTornillo = 3;
 
     [Header("Cámara frente a la Ventila")]
-    [Tooltip("Crea un objeto vacío justo frente a la ventila mirando hacia los tornillos y arrástralo aquí")]
     [SerializeField] private Transform puntoCamaraVentila;
     [SerializeField] private MonoBehaviour scriptMovimientoJugador;
 
-    [Header("Alerta al quitar el 1er Tornillo")]
-    [SerializeField] private float tiempoParaHuir = 10f;
+    [Header("Tensión: Luz Morada y Pantalla Morada")]
+    [SerializeField] private float tiempoParaHuir = 8f;
+    [SerializeField] private float retrasoCaminarGuardia = 1.2f;
+    [SerializeField] private float velocidadGiroLuz = 3.5f;
+    [SerializeField] private float velocidadAcercamientoGuardia = 1.4f;
+    [SerializeField] private float distanciaCapturaLuz = 2.5f;
     [SerializeField] private Patrulla patrullaGuardia;
     [SerializeField] private Transform luzGuardia;
+    [SerializeField] private float rangoLuzAlerta = 18f;
+    [SerializeField] private float intensidadLuzAlerta = 12f;
+    [Tooltip("Arrastra aquí tu imagen UI Filtro_LuzMorada del Canvas")]
+    [SerializeField] private Image filtroPantallaMorada;
+    [SerializeField] private float opacidadMaximaMorada = 0.45f;
+
+    [Header("Checkpoint y Audio al Ser Atrapado")]
+    [SerializeField] private Transform puntoCheckpoint;
+    [SerializeField] private Transform puntoInicioGuardia;
+    [SerializeField] private AudioSource audioSourceAtrapado;
+    [SerializeField] private AudioClip clipAtrapado;
+
+    [Header("Cinemática al Escapar")]
+    [SerializeField] private PlayableDirector cinematicaEscape;
+    [SerializeField] private Animator animadorEscotilla;
+    [SerializeField] private GameObject panelVictoria;
+    [SerializeField] private UnityEvent onPrimerTornilloQuitado;
+    [SerializeField] private UnityEvent onVentilaAbierta;
 
     [Header("Brillo al Acercarse")]
     [SerializeField] private float distanciaBrillo = 4f;
     [SerializeField] private Color colorBrillo = new Color(1f, 0.85f, 0.3f, 1f);
     [SerializeField] private float intensidadBrillo = 1.5f;
 
-    [Header("Animación y Eventos de Escape")]
-    [SerializeField] private Animator animadorEscotilla;
-    [Tooltip("Opcional: arrastra aquí el panel de victoria si quieres que se active al escapar")]
-    [SerializeField] private GameObject panelVictoria;
-    [SerializeField] private UnityEvent onPrimerTornilloQuitado;
-    [SerializeField] private UnityEvent onVentilaAbierta;
-
     private int[] clicsPorCadaTornillo;
     private int tornillosQuitados = 0;
     private bool modoDesarmarActivo = false;
     private bool alertaIniciada = false;
+    private bool guardiaYaInvestigo = false;
     private bool abierta = false;
     private float timerEscape;
+    private float tiempoDesdePrimerTornillo = 0f;
 
     private Transform playerTransform;
     private Camera camaraPrincipal;
+    private Transform padreOriginalCamara;
+    private Vector3 posLocalOriginalCamara;
+    private Quaternion rotLocalOriginalCamara;
+
+    private List<MonoBehaviour> scriptsDesactivados = new List<MonoBehaviour>();
+
+    private Light componenteLuzGuardia;
+    private float rangoLuzOriginal;
+    private float intensidadLuzOriginal;
+
     private Renderer[] renderers;
     private bool brillando = false;
 
     private void Start()
     {
         camaraPrincipal = Camera.main;
+        if (camaraPrincipal != null)
+        {
+            padreOriginalCamara = camaraPrincipal.transform.parent;
+            posLocalOriginalCamara = camaraPrincipal.transform.localPosition;
+            rotLocalOriginalCamara = camaraPrincipal.transform.localRotation;
+        }
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) playerTransform = player.transform;
+
+        if (luzGuardia != null)
+        {
+            componenteLuzGuardia = luzGuardia.GetComponentInChildren<Light>();
+            if (componenteLuzGuardia != null)
+            {
+                rangoLuzOriginal = componenteLuzGuardia.range;
+                intensidadLuzOriginal = componenteLuzGuardia.intensity;
+            }
+        }
+
+        SetOpacidadFiltroMorado(0f);
 
         clicsPorCadaTornillo = new int[objetosTornillos.Length];
         renderers = GetComponentsInChildren<Renderer>();
         timerEscape = tiempoParaHuir;
     }
 
-   private void Update()
+    private void Update()
     {
         if (abierta) return;
 
         Transform refPos = playerTransform != null ? playerTransform : (camaraPrincipal != null ? camaraPrincipal.transform : null);
 
-        // 1. Brillo e interacción con tecla E al acercarse
+        // Si otro script (como TiempoBajoLuz) teletransportó al Player lejos al Checkpoint, libera la cámara de inmediato
+        if (modoDesarmarActivo && playerTransform != null && Vector3.Distance(playerTransform.position, transform.position) > distanciaInteractuar + 2f)
+        {
+            ReiniciarEstadoVentila();
+            RestaurarCamaraYJugador();
+            return;
+        }
+
+        // 1. Brillo e interacción con tecla E
         if (!modoDesarmarActivo && refPos != null)
         {
             float dist = Vector3.Distance(refPos.position, transform.position);
             ActualizarBrillo(dist <= distanciaBrillo);
 
-            if (Input.GetKeyDown(teclaInteractuar))
+            if (dist <= distanciaInteractuar && Input.GetKeyDown(teclaInteractuar))
             {
-                Debug.Log($"[Ventila] Tecla E presionada. Distancia actual: {dist:F2} / Máxima: {distanciaInteractuar}");
-                if (dist <= distanciaInteractuar)
-                {
-                    Interactuar();
-                }
+                Interactuar();
             }
         }
 
-        // 2. Modo minijuego frente a los tornillos
+        // 2. Minijuego frente a los tornillos
         if (modoDesarmarActivo)
         {
             ActualizarBrillo(false);
-
-            // Fuerza la cámara a quedarse en el punto y mirar directo a la ventila cada frame
-            if (camaraPrincipal != null && puntoCamaraVentila != null)
-            {
-                camaraPrincipal.transform.position = puntoCamaraVentila.position;
-                camaraPrincipal.transform.LookAt(transform.position);
-            }
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -101,19 +145,73 @@ public class Ventila : MonoBehaviour
 
             if (alertaIniciada)
             {
+                tiempoDesdePrimerTornillo += Time.deltaTime;
                 timerEscape -= Time.deltaTime;
+
+                // Sube gradualmente la opacidad morada en pantalla conforme se acaba el tiempo
+                float progreso = 1f - Mathf.Clamp01(timerEscape / tiempoParaHuir);
+                SetOpacidadFiltroMorado(progreso * opacidadMaximaMorada);
+
+                // Apunta la luz morada directo a la ventila para ver el haz morado iluminando la placa frente a ti
+                Vector3 objetivoMirada = transform.position;
 
                 if (luzGuardia != null)
                 {
-                    Quaternion rotObjetivo = Quaternion.LookRotation((transform.position - luzGuardia.position).normalized);
-                    luzGuardia.rotation = Quaternion.Slerp(luzGuardia.rotation, rotObjetivo, Time.deltaTime * 5f);
+                    Vector3 dirLuz = (objetivoMirada - luzGuardia.position).normalized;
+                    if (dirLuz != Vector3.zero)
+                    {
+                        Quaternion rotObjetivo = Quaternion.LookRotation(dirLuz);
+                        luzGuardia.rotation = Quaternion.Slerp(luzGuardia.rotation, rotObjetivo, Time.deltaTime * velocidadGiroLuz);
+                    }
+
+                    float anguloLuz = Vector3.Angle(luzGuardia.forward, dirLuz);
+                    float distLuz = Vector3.Distance(luzGuardia.position, objetivoMirada);
+                    if (anguloLuz < 22f && distLuz <= distanciaCapturaLuz)
+                    {
+                        AtrapadoVolverACheckpoint();
+                        return;
+                    }
+                }
+
+                if (tiempoDesdePrimerTornillo >= retrasoCaminarGuardia && patrullaGuardia != null)
+                {
+                    if (!guardiaYaInvestigo)
+                    {
+                        guardiaYaInvestigo = true;
+                        patrullaGuardia.InvestigateNoise(objetivoMirada);
+
+                        NavMeshAgent agente = patrullaGuardia.GetComponent<NavMeshAgent>();
+                        if (agente != null)
+                            agente.speed = velocidadAcercamientoGuardia;
+                    }
+
+                    NavMeshAgent nav = patrullaGuardia.GetComponent<NavMeshAgent>();
+                    if (nav == null || !nav.enabled)
+                    {
+                        Vector3 destinoPlano = new Vector3(objetivoMirada.x, patrullaGuardia.transform.position.y, objetivoMirada.z);
+                        patrullaGuardia.transform.position = Vector3.MoveTowards(
+                            patrullaGuardia.transform.position,
+                            destinoPlano,
+                            velocidadAcercamientoGuardia * Time.deltaTime
+                        );
+                        patrullaGuardia.transform.LookAt(destinoPlano);
+                    }
                 }
 
                 if (timerEscape <= 0f)
                 {
-                    ReiniciarNivel();
+                    AtrapadoVolverACheckpoint();
                 }
             }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (modoDesarmarActivo && !abierta && camaraPrincipal != null && puntoCamaraVentila != null)
+        {
+            camaraPrincipal.transform.position = puntoCamaraVentila.position;
+            camaraPrincipal.transform.LookAt(transform.position);
         }
     }
 
@@ -121,7 +219,6 @@ public class Ventila : MonoBehaviour
     {
         if (abierta || modoDesarmarActivo) return;
 
-        // Si se exige desarmador y aún está tirado en la escena (activo), no permite abrir
         if (exigirDesarmador && objetoDesarmadorEnEscena != null && objetoDesarmadorEnEscena.activeInHierarchy)
         {
             Debug.Log("Necesitas recoger el Desarmador primero.");
@@ -134,19 +231,70 @@ public class Ventila : MonoBehaviour
     private void EntrarModoVentila()
     {
         modoDesarmarActivo = true;
+        scriptsDesactivados.Clear();
 
-        if (scriptMovimientoJugador != null)
+        if (scriptMovimientoJugador != null && scriptMovimientoJugador.enabled)
+        {
             scriptMovimientoJugador.enabled = false;
+            scriptsDesactivados.Add(scriptMovimientoJugador);
+        }
+
+        if (playerTransform != null)
+        {
+            foreach (MonoBehaviour script in playerTransform.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (script != null && script != this && script.enabled)
+                {
+                    script.enabled = false;
+                    scriptsDesactivados.Add(script);
+                }
+            }
+        }
 
         if (camaraPrincipal != null && puntoCamaraVentila != null)
         {
             camaraPrincipal.transform.SetParent(null);
             camaraPrincipal.transform.position = puntoCamaraVentila.position;
-            camaraPrincipal.transform.rotation = puntoCamaraVentila.rotation;
+            camaraPrincipal.transform.LookAt(transform.position);
         }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    private void RestaurarCamaraYJugador()
+    {
+        modoDesarmarActivo = false;
+        SetOpacidadFiltroMorado(0f);
+
+        if (camaraPrincipal != null)
+        {
+            if (padreOriginalCamara != null)
+                camaraPrincipal.transform.SetParent(padreOriginalCamara);
+
+            camaraPrincipal.transform.localPosition = posLocalOriginalCamara;
+            camaraPrincipal.transform.localRotation = rotLocalOriginalCamara;
+            camaraPrincipal.enabled = true;
+        }
+
+        foreach (MonoBehaviour script in scriptsDesactivados)
+        {
+            if (script != null)
+                script.enabled = true;
+        }
+        scriptsDesactivados.Clear();
+
+        if (scriptMovimientoJugador != null)
+            scriptMovimientoJugador.enabled = true;
+
+        if (playerTransform != null)
+        {
+            PlayerController pc = playerTransform.GetComponentInChildren<PlayerController>(true);
+            if (pc != null) pc.enabled = true;
+        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void DetectarClicEnTornillo()
@@ -171,11 +319,16 @@ public class Ventila : MonoBehaviour
                         if (!alertaIniciada)
                         {
                             alertaIniciada = true;
+                            tiempoDesdePrimerTornillo = 0f;
                             timerEscape = tiempoParaHuir;
-                            onPrimerTornilloQuitado?.Invoke();
 
-                            if (patrullaGuardia != null)
-                                patrullaGuardia.InvestigateNoise(transform.position);
+                            if (componenteLuzGuardia != null)
+                            {
+                                componenteLuzGuardia.range = rangoLuzAlerta;
+                                componenteLuzGuardia.intensity = intensidadLuzAlerta;
+                            }
+
+                            onPrimerTornilloQuitado?.Invoke();
                         }
 
                         if (tornillosQuitados >= objetosTornillos.Length)
@@ -189,13 +342,83 @@ public class Ventila : MonoBehaviour
         }
     }
 
+    private void AtrapadoVolverACheckpoint()
+    {
+        if (clipAtrapado != null)
+        {
+            if (audioSourceAtrapado != null)
+            {
+                audioSourceAtrapado.Stop();
+                audioSourceAtrapado.clip = clipAtrapado;
+                audioSourceAtrapado.Play();
+            }
+            else if (camaraPrincipal != null)
+            {
+                AudioSource.PlayClipAtPoint(clipAtrapado, camaraPrincipal.transform.position);
+            }
+        }
+
+        RestaurarCamaraYJugador();
+
+        if (playerTransform != null && puntoCheckpoint != null)
+        {
+            CharacterController cc = playerTransform.GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
+
+            playerTransform.position = puntoCheckpoint.position;
+            playerTransform.rotation = puntoCheckpoint.rotation;
+
+            if (cc != null) cc.enabled = true;
+        }
+
+        ReiniciarEstadoVentila();
+    }
+
+    private void ReiniciarEstadoVentila()
+    {
+        alertaIniciada = false;
+        guardiaYaInvestigo = false;
+        tornillosQuitados = 0;
+        timerEscape = tiempoParaHuir;
+        SetOpacidadFiltroMorado(0f);
+
+        for (int i = 0; i < objetosTornillos.Length; i++)
+        {
+            clicsPorCadaTornillo[i] = 0;
+            if (objetosTornillos[i] != null)
+                objetosTornillos[i].SetActive(true);
+        }
+
+        if (componenteLuzGuardia != null)
+        {
+            componenteLuzGuardia.range = rangoLuzOriginal;
+            componenteLuzGuardia.intensity = intensidadLuzOriginal;
+        }
+
+        if (patrullaGuardia != null && puntoInicioGuardia != null)
+        {
+            NavMeshAgent nav = patrullaGuardia.GetComponent<NavMeshAgent>();
+            if (nav != null && nav.enabled)
+                nav.Warp(puntoInicioGuardia.position);
+            else
+                patrullaGuardia.transform.position = puntoInicioGuardia.position;
+        }
+    }
+
     private void AbrirYHuir()
     {
         abierta = true;
         modoDesarmarActivo = false;
+        SetOpacidadFiltroMorado(0f);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         if (animadorEscotilla != null)
             animadorEscotilla.SetTrigger("Abrir");
+
+        if (cinematicaEscape != null)
+            cinematicaEscape.Play();
 
         if (panelVictoria != null)
             panelVictoria.SetActive(true);
@@ -203,12 +426,13 @@ public class Ventila : MonoBehaviour
         onVentilaAbierta?.Invoke();
     }
 
-    private void ReiniciarNivel()
+    private void SetOpacidadFiltroMorado(float alpha)
     {
-        abierta = true;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (filtroPantallaMorada == null) return;
+        Color c = filtroPantallaMorada.color;
+        c.a = alpha;
+        filtroPantallaMorada.color = c;
+        filtroPantallaMorada.gameObject.SetActive(alpha > 0.001f);
     }
 
     private void ActualizarBrillo(bool activar)

@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity;
     private float xRotation = 0f;
 
+    private float multiplicadorVelocidad = 1f;
+    private float multiplicadorRaton = 1f;
+
     public float CurrentSpeed { get; private set; }
 
     private void Start()
@@ -35,7 +38,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         if (staminaSistema == null)
         {
-            staminaSistema = GetComponent<StaminaSistema>();
+            staminaSistema = FindFirstObjectByType<StaminaSistema>();
         }
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -47,10 +50,17 @@ public class PlayerController : MonoBehaviour
         ManejarMovimiento();
     }
 
+    public void SetMultiplicadorFatiga(float multVelocidad, float multRaton)
+    {
+        multiplicadorVelocidad = multVelocidad;
+        multiplicadorRaton = multRaton;
+    }
+
     private void ManejarVista()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+        float sensibilidadActual = mouseSensitivity * multiplicadorRaton;
+        float mouseX = Input.GetAxis("Mouse X") * sensibilidadActual;
+        float mouseY = Input.GetAxis("Mouse Y") * sensibilidadActual;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
@@ -71,10 +81,10 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
 
         bool intentandoCorrer = Input.GetKey(sprintKey) && moveZ > 0.1f;
-        bool tieneEstamina = staminaSistema == null || staminaSistema.CurrentStamina > 0f;
+        bool tieneEstamina = staminaSistema == null || (staminaSistema.CurrentStamina > 0f && !staminaSistema.EstaAgotado);
         bool estaCorriendo = intentandoCorrer && tieneEstamina;
 
-        CurrentSpeed = estaCorriendo ? sprintSpeed : walkSpeed;
+        CurrentSpeed = (estaCorriendo ? sprintSpeed : walkSpeed) * multiplicadorVelocidad;
 
         controller.Move(move * CurrentSpeed * Time.deltaTime);
 
