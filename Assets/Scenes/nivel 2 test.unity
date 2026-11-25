@@ -2854,7 +2854,6 @@ GameObject:
   - component: {fileID: 1554469967}
   - component: {fileID: 1554469969}
   - component: {fileID: 1554469968}
-  - component: {fileID: 1554469971}
   - component: {fileID: 1554469970}
   - component: {fileID: 1554469972}
   - component: {fileID: 1554469973}
@@ -2929,25 +2928,6 @@ MonoBehaviour:
   puntoJaulaOInicio: {fileID: 1656217621}
   panelAtrapadoUI: {fileID: 0}
   duracionSecuencia: 2
---- !u!114 &1554469971
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1554469966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aedd8bb0608aae438c4c2557da4037f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventarioUI
-  panelHojaLista: {fileID: 0}
-  teclaSacarHoja: 9
-  iniciarConHojaAbierta: 0
-  asomarHojaAlRecoger: 1
-  segundosAsomarHoja: 2
-  materialesTrampa: []
-  avisoArmarUI: {fileID: 0}
 --- !u!114 &1554469972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2960,7 +2940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7da38d0d4fbcfb41b3a3896770d82d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Escape
-  nombreSiguienteEscena: Nivel2
+  nombreSiguienteEscena: Cinematica2
 --- !u!114 &1554469973
 MonoBehaviour:
   m_ObjectHideFlags: 0
