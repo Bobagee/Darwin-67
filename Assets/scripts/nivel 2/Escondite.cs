@@ -29,6 +29,11 @@ public class Escondite : MonoBehaviour
     private void Update()
     {
         if (playerTransform == null) return;
+        if (escondidoEnEste && insideSpot != null && Vector3.Distance(playerTransform.position, insideSpot.position) > 2f)
+        {
+            escondidoEnEste = false;
+            IsPlayerHidden = false;
+        }
 
         float dist = Vector3.Distance(playerTransform.position, transform.position);
         bool cerca = dist <= distanciaEsconderse;
