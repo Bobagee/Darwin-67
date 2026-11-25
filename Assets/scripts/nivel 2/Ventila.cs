@@ -125,6 +125,11 @@ public class Ventila : MonoBehaviour
         if (!modoDesarmarActivo && refPos != null)
         {
             float dist = Vector3.Distance(refPos.position, transform.position);
+            if (dist <= distanciaInteractuar)
+            {
+                bool falta = exigirDesarmador && objetoDesarmadorEnEscena != null && objetoDesarmadorEnEscena.activeInHierarchy;
+                UIInteraccion.TextoExtra = falta ? "Necesitas un desarmador" : "Pulsa [E] para abrir la ventila";
+            }
             ActualizarBrillo(dist <= distanciaBrillo);
 
             if (dist <= distanciaInteractuar && Input.GetKeyDown(teclaInteractuar))
@@ -132,6 +137,8 @@ public class Ventila : MonoBehaviour
                 Interactuar();
             }
         }
+
+
 
         // 2. Minijuego frente a los tornillos
         if (modoDesarmarActivo)

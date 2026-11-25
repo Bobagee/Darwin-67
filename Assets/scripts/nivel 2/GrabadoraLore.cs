@@ -89,6 +89,7 @@ public class GrabadoraLore : MonoBehaviour
 
         float distancia = Vector3.Distance(referenciaJugador.position, transform.position);
         bool mirando = MirandoGrabadora();
+        if (distancia <= distanciaInteractuar && mirando) UIInteraccion.TextoExtra = "Pulsa [E] para escuchar";
 
         ActualizarBrillo(distancia <= distanciaBrillo && mirando);
 

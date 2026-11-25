@@ -37,7 +37,7 @@ public class Escondite : MonoBehaviour
 
         float dist = Vector3.Distance(playerTransform.position, transform.position);
         bool cerca = dist <= distanciaEsconderse;
-
+        if (cerca) UIInteraccion.TextoExtra = escondidoEnEste ? "Pulsa [Q] para salir" : "Pulsa [Q] para esconderte";
         ActualizarBrillo(cerca && !IsPlayerHidden);
 
         if ((cerca && !IsPlayerHidden && Input.GetKeyDown(teclaEsconderse)) ||
