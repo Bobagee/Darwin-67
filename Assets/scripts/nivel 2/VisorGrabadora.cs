@@ -27,6 +27,14 @@ public class VisorGrabadora : MonoBehaviour
         if (panelGrabadora != null)
             panelGrabadora.SetActive(false);
     }
+    private void Start()
+    {
+        if (scriptControlJugador == null)
+        {
+            PlayerController pc = FindFirstObjectByType<PlayerController>();
+            if (pc != null) scriptControlJugador = pc;
+        }
+    }
 
     private void Update()
     {

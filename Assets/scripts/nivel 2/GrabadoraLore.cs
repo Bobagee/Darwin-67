@@ -10,6 +10,8 @@ public class GrabadoraLore : MonoBehaviour
     [Header("Interacción y Resplandor")]
     [SerializeField] private float distanciaBrillo = 4.5f;
     [SerializeField] private float distanciaInteractuar = 2.5f;
+   
+    [SerializeField] private float distanciaCerrar = 4f;
     [Range(15f, 90f)]
     [SerializeField] private float anguloMirada = 50f;
     [SerializeField] private KeyCode teclaInteractuar = KeyCode.E;
@@ -62,6 +64,13 @@ public class GrabadoraLore : MonoBehaviour
             if (!visorAbierto)
             {
                 estaAbiertaEstaGrabadora = false;
+                return;
+            }
+
+            float distAbierta = Vector3.Distance(referenciaJugador.position, transform.position);
+            if (distAbierta > distanciaCerrar)
+            {
+                Cerrar();
                 return;
             }
 
