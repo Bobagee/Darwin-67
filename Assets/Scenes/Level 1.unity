@@ -5156,7 +5156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d22dedc84a8a2b40bdfa534955eaf54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatchResult
-  raton: {fileID: 0}
+  raton: {fileID: 1895913823}
   alAtraparRaton:
     m_PersistentCalls:
       m_Calls:
@@ -9500,10 +9500,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Trampa Lista
-
-
-    Presiona "G" para colocarla cerca de las huellas'
+  m_text: "Trampa Lista\n\nPresiona \"G\" para colocarla cerca de las huellas. \nPresiona
+    \"SPACE\" para capturar."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -21423,13 +21421,13 @@ MonoBehaviour:
   puntoEscape: {fileID: 701358454}
   zonaHuellas: {fileID: 55610157}
   distanciaAlejamiento: 3
-  velocidad: 4
-  velocidadHuida: 5.5
-  distanciaLlegada: 0.5
+  velocidad: 5
+  velocidadHuida: 5
+  distanciaLlegada: 0.1
   velocidadGiro: 10
   tiempoParaMorder: 1
-  ventanaMin: 3
-  ventanaMax: 5
+  ventanaMin: 1.5
+  ventanaMax: 2.5
   tiempoOculto: 6
 --- !u!65 &1895913824
 BoxCollider:
