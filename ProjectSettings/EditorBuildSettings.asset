@@ -9,11 +9,17 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 0e8afadba857b4b43af76e432e4319d0
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/Cinematica1.unity
+    guid: 573edd1670f4e404bade92d9acafb4e3
   - enabled: 1
-    path: Assets/Scenes/Luz.unity
-    guid: 76ef62ed5945b1d4b96e646cfb205c6c
+    path: Assets/Scenes/Level 1.unity
+    guid: cc1d78f86c61e6b47bf0a158cd4e3b8b
+  - enabled: 1
+    path: Assets/Scenes/Cinematica2.unity
+    guid: 36db4cb4393435f4087f17b402c64a7f
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: dbc6309944487b94e821a31eeb64aa2a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
