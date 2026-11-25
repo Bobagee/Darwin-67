@@ -133,12 +133,14 @@ public class Voz : MonoBehaviour
 
     private void Awake()
     {
-        // manten tu código actual de awake
+        foreach (Linea l in lineas)
+            if (l.audio != null) porAudio[l.audio] = l;
+
+        if (panelSubtitulos != null) panelSubtitulos.SetActive(false);
 
         if (fuente != null)
             fuente.mute = PlayerPrefs.GetInt(ClaveVoces, 1) == 0;
     }
-
     public void Decir(AudioClip audio)
     {
         if (audio == null) return;
@@ -181,10 +183,13 @@ public class Voz : MonoBehaviour
         {
             AudioClip audio = cola[0];
             cola.RemoveAt(0);
+            if (audio == null) continue;
+
             yaDichas.Add(audio);
 
             if (fuente != null)
             {
+                fuente.Stop();
                 fuente.clip = audio;
                 fuente.Play();
             }
@@ -198,12 +203,15 @@ public class Voz : MonoBehaviour
                 textoSubtitulos.text = l.subtitulo;
                 if (panelSubtitulos != null) panelSubtitulos.SetActive(true);
             }
+            else if (panelSubtitulos != null)
+            {
+                panelSubtitulos.SetActive(false);
+            }
 
-            yield return new WaitForSeconds(audio.length);
-
-            if (panelSubtitulos != null) panelSubtitulos.SetActive(false);
+            yield return new WaitForSecondsRealtime(audio.length);
         }
 
+        if (panelSubtitulos != null) panelSubtitulos.SetActive(false);
         reproduciendo = false;
     }
 }
