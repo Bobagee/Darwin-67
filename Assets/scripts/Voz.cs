@@ -36,7 +36,12 @@ public class Voz : MonoBehaviour
    
     [SerializeField] private int maxEnEspera = 2;
 
-    private const string ClaveSubtitulos = "opcion_subtitulos"; // la misma que usa OpcionSubtitulos
+    [Header("Secuencia inicial")]
+    [SerializeField] private AudioClip[] audiosIniciales;
+    [SerializeField] private GameObject instruccionTab;
+    [SerializeField] private float esperaExtraTab = 0.2f;
+
+    private const string ClaveSubtitulos = "opcion_subtitulos"; 
 
     private readonly Dictionary<AudioClip, Linea> porAudio = new Dictionary<AudioClip, Linea>();
     private readonly HashSet<AudioClip> yaDichas = new HashSet<AudioClip>();
@@ -44,6 +49,63 @@ public class Voz : MonoBehaviour
     private bool reproduciendo;
     private int indiceFallo;
     private int ultimaBurla = -1;
+
+    public bool EstaReproduciendo => reproduciendo;
+
+    public void CancelarTodos()
+    {
+        StopAllCoroutines();
+        cola.Clear();
+        reproduciendo = false;
+
+        if (fuente != null) fuente.Stop();
+        if (panelSubtitulos != null) panelSubtitulos.SetActive(false);
+    }
+
+    public IEnumerator ReproducirSecuenciaInicial(System.Action alTerminar)
+    {
+        CancelarTodos();
+
+        if (audiosIniciales == null || audiosIniciales.Length == 0)
+        {
+            alTerminar?.Invoke();
+            yield break;
+        }
+
+        for (int i = 0; i < audiosIniciales.Length; i++)
+        {
+            AudioClip clip = audiosIniciales[i];
+            if (clip == null) continue;
+
+            fuente.clip = clip;
+            fuente.Play();
+
+            porAudio.TryGetValue(clip, out Linea linea);
+
+            bool mostrarTexto = linea != null &&
+                !string.IsNullOrEmpty(linea.subtitulo) &&
+                PlayerPrefs.GetInt(ClaveSubtitulos, 1) == 1;
+
+            if (mostrarTexto)
+            {
+                textoSubtitulos.text = linea.subtitulo;
+                panelSubtitulos.SetActive(true);
+            }
+            else
+            {
+                panelSubtitulos.SetActive(false);
+            }
+
+            yield return new WaitForSecondsRealtime(clip.length);
+        }
+
+        if (panelSubtitulos != null)
+            panelSubtitulos.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(esperaExtraTab);
+
+        alTerminar?.Invoke();
+    }
 
     private void Awake()
     {

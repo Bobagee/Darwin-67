@@ -25,6 +25,7 @@ public class TrapController : MonoBehaviour
    
     [SerializeField] private bool colocarCercaDeHuellas = true;
     [SerializeField] private FootprintZone zonaHuellas;
+    [SerializeField] private Vector3 ajusteRotacionTrampa;
 
     [SerializeField] private float separacionDeHuellas = 1f;
 
@@ -153,6 +154,18 @@ public void ConfirmarCrafteo()
         }
 
         trampa.transform.position = pos;
+        //Orientación:
+        Vector3 haciaRaton = posRaton - pos;
+        haciaRaton.y = 0f;
+
+        if (haciaRaton.sqrMagnitude > 0.0001f)
+        {
+            Quaternion mirarAlRaton = Quaternion.LookRotation(haciaRaton.normalized, Vector3.up);
+            trampa.transform.rotation = mirarAlRaton * Quaternion.Euler(ajusteRotacionTrampa);
+        }
+
+        trampa.transform.position = pos;
+
         trampa.SetActive(true);
         Debug.Log($"[Trampa] base={posRaton} trampa={pos} darwin={raton.transform.position}");
         colocada = true;
