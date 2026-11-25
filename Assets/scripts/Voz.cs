@@ -52,19 +52,23 @@ public class Voz : MonoBehaviour
 
     public bool EstaReproduciendo => reproduciendo;
 
-    public void CancelarTodos()
+    public void DetenerTodo()
     {
         StopAllCoroutines();
         cola.Clear();
         reproduciendo = false;
 
         if (fuente != null) fuente.Stop();
-        if (panelSubtitulos != null) panelSubtitulos.SetActive(false);
+
+        if (panelSubtitulos != null)
+            panelSubtitulos.SetActive(false);
     }
+
+
 
     public IEnumerator ReproducirSecuenciaInicial(System.Action alTerminar)
     {
-        CancelarTodos();
+        DetenerTodo();
 
         if (audiosIniciales == null || audiosIniciales.Length == 0)
         {
@@ -72,17 +76,23 @@ public class Voz : MonoBehaviour
             yield break;
         }
 
+        reproduciendo = true;
+
         for (int i = 0; i < audiosIniciales.Length; i++)
         {
             AudioClip clip = audiosIniciales[i];
             if (clip == null) continue;
 
-            fuente.clip = clip;
-            fuente.Play();
+            if (fuente != null)
+            {
+                fuente.clip = clip;
+                fuente.Play();
+            }
 
             porAudio.TryGetValue(clip, out Linea linea);
 
-            bool mostrarTexto = linea != null &&
+            bool mostrarTexto =
+                linea != null &&
                 !string.IsNullOrEmpty(linea.subtitulo) &&
                 PlayerPrefs.GetInt(ClaveSubtitulos, 1) == 1;
 
@@ -91,13 +101,15 @@ public class Voz : MonoBehaviour
                 textoSubtitulos.text = linea.subtitulo;
                 panelSubtitulos.SetActive(true);
             }
-            else
+            else if (panelSubtitulos != null)
             {
                 panelSubtitulos.SetActive(false);
             }
 
             yield return new WaitForSecondsRealtime(clip.length);
         }
+
+        reproduciendo = false;
 
         if (panelSubtitulos != null)
             panelSubtitulos.SetActive(false);
@@ -107,15 +119,26 @@ public class Voz : MonoBehaviour
         alTerminar?.Invoke();
     }
 
-    private void Awake()
-    {
-        foreach (Linea l in lineas)
-            if (l.audio != null) porAudio[l.audio] = l;
 
-        if (panelSubtitulos != null) panelSubtitulos.SetActive(false);
+
+    private const string ClaveVoces = "opcion_voces";
+
+    public void ActivarVoces(bool activo)
+    {
+        PlayerPrefs.SetInt(ClaveVoces, activo ? 1 : 0);
+
+        if (!activo)
+            DetenerTodo();
     }
 
-   
+    private void Awake()
+    {
+        // manten tu código actual de awake
+
+        if (fuente != null)
+            fuente.mute = PlayerPrefs.GetInt(ClaveVoces, 1) == 0;
+    }
+
     public void Decir(AudioClip audio)
     {
         if (audio == null) return;

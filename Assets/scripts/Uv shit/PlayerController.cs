@@ -33,6 +33,13 @@ public class PlayerController : MonoBehaviour
 
     public float CurrentSpeed { get; private set; }
 
+    public bool AccionesBloqueadas { get; private set; }
+
+    public void BloquearAcciones(bool bloquear)
+    {
+        AccionesBloqueadas = bloquear;
+    }
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -46,6 +53,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (AccionesBloqueadas)
+        {
+            ManejarVista();
+            return;
+        }
         ManejarVista();
         ManejarMovimiento();
     }
