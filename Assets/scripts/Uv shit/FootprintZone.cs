@@ -170,25 +170,39 @@ public class FootprintZone : MonoBehaviour
 
     private void HandleFootprintVisibility()
     {
-        if (currentZoneRenderers == null || playerUVLight == null) return;
+        if (currentZoneRenderers == null || currentZoneRenderers.Length == 0 || playerUVLight == null) return;
 
         siendoAlumbrada = false;
 
-        if (playerUVLight.IsOn && playerUVLight.Spotlight != null && zones[activeZoneIndex] != null)
+        if (playerUVLight.IsOn && playerUVLight.Spotlight != null)
         {
             Light lightComp = playerUVLight.Spotlight;
             Transform lightTransform = lightComp.transform;
 
-            Vector3 zonePosition = zones[activeZoneIndex].transform.position;
-            Vector3 dirToZone = zonePosition - lightTransform.position;
-            float distanceToZone = dirToZone.magnitude;
-
-            if (distanceToZone <= lightComp.range)
+            // Caja que envuelve las huellas visibles (en vez del centro de la zona)
+            Bounds caja = default;
+            bool primero = true;
+            foreach (Renderer r in currentZoneRenderers)
             {
-                float angle = Vector3.Angle(lightTransform.forward, dirToZone.normalized);
-                if (angle <= lightComp.spotAngle * 0.5f)
+                if (r == null) continue;
+                if (primero) { caja = r.bounds; primero = false; }
+                else caja.Encapsulate(r.bounds);
+            }
+
+            if (!primero)
+            {
+                Vector3 dirToZone = caja.center - lightTransform.position;
+                float distanceToZone = dirToZone.magnitude;
+                float radio = caja.extents.magnitude;
+
+                if (distanceToZone <= lightComp.range + radio)
                 {
-                    siendoAlumbrada = true;
+                    float angle = Vector3.Angle(lightTransform.forward, dirToZone.normalized);
+                    float margen = Mathf.Atan2(radio, Mathf.Max(distanceToZone, 0.01f)) * Mathf.Rad2Deg;
+                    if (angle <= lightComp.spotAngle * 0.5f + margen)
+                    {
+                        siendoAlumbrada = true;
+                    }
                 }
             }
         }

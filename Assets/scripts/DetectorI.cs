@@ -11,6 +11,7 @@ public class DetectorI : MonoBehaviour
     [SerializeField] private KeyCode teclaInteraccion = KeyCode.E;
 
     private Iteraccion objetoActual;
+    public Iteraccion ObjetoActual => objetoActual;
 
     private void Update()
     {

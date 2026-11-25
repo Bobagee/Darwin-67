@@ -8,16 +8,19 @@ public class sistemaCrafteo : MonoBehaviour
     [SerializeField] private GameObject panelMesaCrafteoUI;
     [SerializeField] private PiezaArrastrableUI[] piezasArrastrables;
 
-    [Header("Modelos 3D sobre la Mesa (Opcional)")]
-    [Tooltip("0: Palo+Hilo en mesa, 1: +Caja en mesa, 2: Trampa completa con Queso")]
+    [Header("Modelos 3D sobre la Mesa")]
+    [Tooltip("0: Palo, 1: Palo + Hilo, 2: Palo + Hilo + Caja. Con el Queso se termina el crafteo y se sale de la mesa")]
     [SerializeField] private GameObject[] pasos3DEnMesa;
 
     [Header("Conexión con TrapController (Aner)")]
     public UnityEvent onTrampaCompletada;
     public static event Action OnTrampaArmada;
 
+    // Orden en el que se deben arrastrar las piezas al centro
+    private static readonly string[] ordenPiezas = { "Palo", "Hilo", "Caja", "Queso" };
+
+    // Cuantas piezas llevamos puestas (0 a 4)
     private int pasoActual = 0;
-    private PiezaArrastrableUI primeraPiezaPaso1;
     private MesaCrafteo mesaActual;
 
     private void Start()
@@ -30,7 +33,6 @@ public class sistemaCrafteo : MonoBehaviour
     {
         mesaActual = mesa;
         pasoActual = 0;
-        primeraPiezaPaso1 = null;
 
         ActualizarVisualesPasos();
 
@@ -54,46 +56,21 @@ public class sistemaCrafteo : MonoBehaviour
 
     public void IntentarAgregarPieza(PiezaArrastrableUI pieza)
     {
-        string id = pieza.ItemID;
+        if (pieza == null || pasoActual >= ordenPiezas.Length) return;
 
-        // PASO 1: Palo + Hilo
-        if (pasoActual == 0)
+        // Solo se acepta la pieza que toca: Palo -> Hilo -> Caja -> Queso
+        if (pieza.ItemID != ordenPiezas[pasoActual]) return;
+
+        pieza.MarcarComoUsada();
+        pasoActual++;
+
+        if (pasoActual >= ordenPiezas.Length)
         {
-            if (id == "Palo" || id == "Hilo")
-            {
-                if (primeraPiezaPaso1 == null)
-                {
-                    primeraPiezaPaso1 = pieza;
-                    pieza.MarcarComoUsada();
-                }
-                else if (primeraPiezaPaso1.ItemID != id)
-                {
-                    pieza.MarcarComoUsada();
-                    pasoActual = 1;
-                    ActualizarVisualesPasos();
-                }
-            }
+            FinalizarCrafteo();   // con el Queso termina y se sale de la mesa
         }
-        // PASO 2: + Caja
-        else if (pasoActual == 1)
+        else
         {
-            if (id == "Caja")
-            {
-                pieza.MarcarComoUsada();
-                pasoActual = 2;
-                ActualizarVisualesPasos();
-            }
-        }
-        // PASO 3: + Queso
-        else if (pasoActual == 2)
-        {
-            if (id == "Queso")
-            {
-                pieza.MarcarComoUsada();
-                pasoActual = 3;
-                ActualizarVisualesPasos();
-                FinalizarCrafteo();
-            }
+            ActualizarVisualesPasos();
         }
     }
 
@@ -101,13 +78,11 @@ public class sistemaCrafteo : MonoBehaviour
     {
         if (pasos3DEnMesa == null) return;
 
+        // Se ve un solo modelo a la vez: el del paso actual. Los demás se apagan.
         for (int i = 0; i < pasos3DEnMesa.Length; i++)
         {
             if (pasos3DEnMesa[i] != null)
-            {
-                // Muestra solo el paso actual alcanzado (o los acumulados)
                 pasos3DEnMesa[i].SetActive(i == pasoActual - 1);
-            }
         }
     }
 
@@ -117,7 +92,7 @@ public class sistemaCrafteo : MonoBehaviour
         if (InventarioUI.Instance != null)
             InventarioUI.Instance.OcultarAvisoArmar();
 
-        // Oculta los modelos de armado sobre la mesa
+        // Apaga los modelos de armado sobre la mesa
         pasoActual = 0;
         ActualizarVisualesPasos();
 

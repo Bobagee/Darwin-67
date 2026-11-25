@@ -1,39 +1,43 @@
+
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Controla la trampa del Nivel 1.
-/// - Colocar (tecla G): pone la trampa en la posicion del raton (con una separacion opcional).
-/// - Atrapar (barra espaciadora): solo funciona si el jugador esta a menos de distanciaAtrapar
-///   metros de la trampa. CatchResult decide si el raton estaba o no.
-/// </summary>
+
 public class TrapController : MonoBehaviour
 {
     [Header("Referencias")]
     [SerializeField] private MouseBaitAI raton;
     [SerializeField] private CatchResult resultado;
-    [Tooltip("Si se deja vacio se busca el PlayerController de la escena")]
+   
     [SerializeField] private Transform jugador;
-    [Tooltip("Objeto de la trampa en la escena (debe ser OTRO objeto, no el que lleva este script). Se oculta al inicio y se activa al colocarla")]
+   
     [SerializeField] private GameObject trampa;
 
     [Header("Colocacion")]
     [SerializeField] private KeyCode teclaColocar = KeyCode.G;
-    [Tooltip("Distancia maxima jugador - raton para poder colocarla (representa la ubicacion aproximada). 0 = sin limite")]
+    
     [SerializeField] private float distanciaMaxColocacion = 4f;
-    [Tooltip("Metros que separan la trampa del raton, hacia el jugador (cerca de la escotilla). 0 = justo en el raton")]
+    
     [SerializeField] private float separacionDelRaton = 1.5f;
+
+   
+    [SerializeField] private bool colocarCercaDeHuellas = true;
+    [SerializeField] private FootprintZone zonaHuellas;
+
+    [SerializeField] private float separacionDeHuellas = 1f;
+
     [SerializeField] private bool ajustarAlSuelo = true;
     [SerializeField] private LayerMask capaSuelo = ~0;
 
     [Header("Boton de atrapar")]
     [SerializeField] private KeyCode teclaAtrapar = KeyCode.Space;
-    [Tooltip("Metros (en el plano) maximos entre el jugador y la trampa para poder activarla")]
+    
     [SerializeField] private float distanciaAtrapar = 1f;
 
     [Header("Crafteo")]
-    [Tooltip("Si esta activo, no se puede colocar la trampa hasta recoger todos los materiales. Desactivalo para probar")]
+    
     [SerializeField] private bool requerirMateriales = true;
     [SerializeField] private ItemTipo[] materialesRequeridos = { ItemTipo.Palo, ItemTipo.Caja, ItemTipo.Queso, ItemTipo.Hilo };
 
@@ -117,6 +121,18 @@ public void ConfirmarCrafteo()
         if (!raton.EstaLibre) return false; // no hay raton en la zona
 
         Vector3 posRaton = raton.transform.position;
+        float separacion = separacionDelRaton;
+
+        // Punto de referencia: las huellas de la zona activa (si esta activado)
+        if (colocarCercaDeHuellas && zonaHuellas != null)
+        {
+            Transform zona = zonaHuellas.GetActiveZoneTransform();
+            if (zona != null)
+            {
+                posRaton = zona.position;
+                separacion = separacionDeHuellas;
+            }
+        }
 
         if (distanciaMaxColocacion > 0f && DistanciaPlano(jugador.position, posRaton) > distanciaMaxColocacion)
             return false;
@@ -125,9 +141,12 @@ public void ConfirmarCrafteo()
         haciaJugador.y = 0f;
         Vector3 dir = haciaJugador.sqrMagnitude > 0.0001f ? haciaJugador.normalized : raton.transform.forward;
 
-        Vector3 pos = posRaton + dir * separacionDelRaton;
+        Vector3 pos = posRaton + dir * separacion; 
 
-        if (ajustarAlSuelo && Physics.Raycast(pos + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 6f,
+
+        float yPiso = raton.transform.position.y;
+        pos.y = yPiso;
+        if (ajustarAlSuelo && Physics.Raycast(new Vector3(pos.x, yPiso + 0.5f, pos.z), Vector3.down, out RaycastHit hit, 1.5f,
                 capaSuelo, QueryTriggerInteraction.Ignore))
         {
             pos = hit.point;
@@ -135,6 +154,7 @@ public void ConfirmarCrafteo()
 
         trampa.transform.position = pos;
         trampa.SetActive(true);
+        Debug.Log($"[Trampa] base={posRaton} trampa={pos} darwin={raton.transform.position}");
         colocada = true;
 
         // El queso se usa como cebo: si falla, hay que recoger el queso extra

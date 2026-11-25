@@ -25,6 +25,8 @@ public class PickUpItem : Iteraccion
     public ItemTipo Tipo => tipoObjeto;
     public bool Recolectado => recolectado;
 
+    public override string TextoPrompt => recolectado ? "" : "Pulsa [E] para agarrar";
+
     private void Awake()
     {
         posicionInicial = transform.position;

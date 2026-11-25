@@ -114,7 +114,7 @@ public class Bitacoras : MonoBehaviour
 
     private int ObtenerPrimerDesbloqueado()
     {
-        for (int i = 1; i <= 5; i++)
+        for (int i = 1; i <= 6; i++)
         {
             if (archivosDesbloqueados.ContainsKey(i)) return i;
         }
